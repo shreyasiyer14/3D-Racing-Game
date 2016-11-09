@@ -2,8 +2,9 @@
  * Created by Shreyas Iyer, IMT2015018
  * Module: Terrain description
  * Created on: 8/11/2016
- */
+
 package terrain;
+
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.geomipmap.TerrainQuad;
@@ -32,6 +33,7 @@ import com.jme3.scene.shape.Box;
  *
  * @author EOF-1
  */
+/*
 public class Terrain {
     private static TerrainQuad terrain;
     private static TerrainLodControl control;
@@ -73,4 +75,5 @@ public class Terrain {
         TerrainLodControl control = new TerrainLodControl(terrain, getCamera());
         terrain.addControl(control);
     }
-}
+
+}*/

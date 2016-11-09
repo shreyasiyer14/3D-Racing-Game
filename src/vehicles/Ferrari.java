@@ -4,23 +4,9 @@
  * Created on: 8/11/2016
  */
 package vehicles;
-import com.jme3.texture.Texture;
-import com.jme3.texture.Texture.WrapMode;
-import java.util.ArrayList;
-import java.util.List;
-import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.control.VehicleControl;
-import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
-import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.control.CameraControl.ControlDirection;
-import com.jme3.asset.AssetManager;
 /**
  *
  * @author EOF-1
