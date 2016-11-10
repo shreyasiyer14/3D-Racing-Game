@@ -1,10 +1,10 @@
-/*
- * Created by Shreyas Iyer, IMT2015018
+
+ /* Created by Udit Jindal
  * Module: Terrain description
- * Created on: 8/11/2016
+ * Created on: 10/11/2016*/
 
 package terrain;
-
+import com.jme3.asset.AssetManager;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.geomipmap.TerrainQuad;
@@ -15,7 +15,7 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import java.util.ArrayList;
 import java.util.List;
-import com.jme3.app.SimpleApplication;
+import com.jme3.app.Application;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.font.BitmapText;
 import com.jme3.light.DirectionalLight;
@@ -29,23 +29,40 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.scene.shape.Box;
 
-/**
- *
- * @author EOF-1
- */
-/*
-public class Terrain {
-    private static TerrainQuad terrain;
-    private static TerrainLodControl control;
-    private static Texture heightMapImage;
-    public Terrain (String name, int size, int num, Texture heightMap) {
+
+ //*
+ //* @author Ud-jindal
+ 
+public class Terrain1{
+    private Material mat_terrain;
+    private TerrainQuad myterrain;
+    private String Name;
+    private int PatchSize;
+    private Vector3f LocalTrasnlation;
+    private Vector3f LocalScale;
+    private AssetManager assetManager;
+    private AbstractHeightMap heightmap;
+    
+    public Terrain1(String Name, int PatchSize, Vector3f LocalTranslation, Vector3f LocalScale,
+            AssetManager assetManager){
         
+        
+        this.assetManager= assetManager;
+        this.Name= Name;
+        this.PatchSize= PatchSize;
+        this.LocalTrasnlation= LocalTranslation;
+        this.LocalScale= LocalScale;
+        //Setting Material
+        init_material();
+        
+
     }
-    public void initTerrain () {
-        Material mat_terrain = new Material(assetManager, 
+    
+    private void init_material(){
+        mat_terrain = new Material(assetManager, 
             "Common/MatDefs/Terrain/Terrain.j3md");
         mat_terrain.setTexture("Alpha", assetManager.loadTexture(
-            "Textures/Terrain/splat/alphamap.png"));
+            "Textures/Terrain/splat/alphamap.png")); 
         Texture grass = assetManager.loadTexture(
             "Textures/Terrain/splat/grass.jpg");
         grass.setWrap(WrapMode.Repeat);
@@ -61,19 +78,25 @@ public class Terrain {
         rock.setWrap(WrapMode.Repeat);
         mat_terrain.setTexture("Tex3", rock);
         mat_terrain.setFloat("Tex3Scale", 128f);
-        AbstractHeightMap heightmap = null;
+        heightmap = null;
         Texture heightMapImage = assetManager.loadTexture(
             "Textures/Terrain/splat/mountains512.png");
         heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
         heightmap.load();
-        int patchSize = 65;
-        TerrainQuad terrain = new TerrainQuad("my terrain", patchSize, 513, heightmap.getHeightMap());
-        terrain.setMaterial(mat_terrain);
-        terrain.setLocalTranslation(-100, 0, -100);
-        terrain.setLocalScale(2f, 1f, 2f);
-        rootNode.attachChild(terrain);
-        TerrainLodControl control = new TerrainLodControl(terrain, getCamera());
-        terrain.addControl(control);
     }
-
-}*/
+    
+    public void init_terrain()
+    {
+        
+        myterrain= new TerrainQuad(Name, PatchSize, 513, heightmap.getHeightMap() );
+        myterrain.setMaterial(mat_terrain);
+        myterrain.setLocalTranslation(LocalTrasnlation);
+        myterrain.setLocalScale(LocalScale);
+        
+    }
+    
+    public TerrainQuad get_TerrainQuad(){
+        return myterrain;
+    }
+    
+}
