@@ -16,6 +16,8 @@ import com.jme3.texture.Texture.WrapMode;
 import java.util.ArrayList;
 import java.util.List;
 import com.jme3.app.Application;
+import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.font.BitmapText;
 import com.jme3.light.DirectionalLight;
@@ -87,12 +89,12 @@ public class Terrain1{
     
     public void init_terrain()
     {
-        
         myterrain= new TerrainQuad(Name, PatchSize, 513, heightmap.getHeightMap() );
         myterrain.setMaterial(mat_terrain);
         myterrain.setLocalTranslation(LocalTrasnlation);
         myterrain.setLocalScale(LocalScale);
-        
+        myterrain.addControl(new RigidBodyControl(0));
+        getPhysicsSpace().add(myterrain);
     }
     
     public TerrainQuad get_TerrainQuad(){
