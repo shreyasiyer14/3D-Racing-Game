@@ -38,8 +38,6 @@ public class Ferrari {
     private VehicleWheel fr, fl, br, bl;
     private Node node_fr, node_fl, node_br, node_bl;
     private float wheelRadius;
-    public float steeringValue = 0;
-    public float accelerationValue = 0;
     private AppStateManager stateManager;
     private AssetManager assetManager;
     

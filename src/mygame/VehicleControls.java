@@ -62,24 +62,24 @@ public class VehicleControls implements ActionListener {
     public void onAction(String binding, boolean value, float tpf) {
         if (binding.equals("Lefts")) {
             if (value) {
-                Vehicle.steeringValue += 0.5f;
+                steeringValue += 0.5f;
             } else {
-                Vehicle.steeringValue += -.5f;
+                steeringValue += -.5f;
             }
             Vehicle.getController().steer(steeringValue);
         } else if (binding.equals("Rights")) {
             if (value) {
-                Vehicle.steeringValue += -.5f;
+                steeringValue += -.5f;
             } else {
-                Vehicle.steeringValue += .5f;
+                steeringValue += .5f;
             }
             Vehicle.getController().steer(steeringValue);
         } //note that our fancy car actually goes backwards..
         else if (binding.equals("Ups")) {
             if (value) {
-                Vehicle.accelerationValue -= 800;
+                accelerationValue -= 800;
             } else {
-                Vehicle.accelerationValue += 800;
+                accelerationValue += 800;
             }
             Vehicle.getController().accelerate(accelerationValue);
             Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));

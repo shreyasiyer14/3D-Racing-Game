@@ -41,11 +41,11 @@ public class Main extends SimpleApplication {
         terrain.init_terrain();
         
         //flyCam.setEnabled(false);
-        /*CameraNode camNode = new CameraNode("Camera Node", cam);
+        CameraNode camNode = new CameraNode("Camera Node", cam);
         camNode.setControlDir(ControlDirection.SpatialToCamera);
         camNode.setLocalTranslation(new Vector3f(0, 4, 12));
         camNode.rotate(0, 22, 0);
-        ferrari.getCarNode().attachChild(camNode);*/
+        ferrari.getCarNode().attachChild(camNode);
         getPhysicsSpace().add(ferrari.getController());
         
         DirectionalLight dl = new DirectionalLight();
