@@ -35,11 +35,14 @@ public class VehicleControls implements ActionListener {
     private Ferrari Vehicle; 
     private float accelerationValue;
     private float steeringValue;
+    private float accelerationPower;
+    private float jumpPower;
     int BreakPower;
     InputManager inputManager;
-    public VehicleControls( Ferrari Vehicle, 
+    public VehicleControls( Ferrari Vehicle, float accelerationPower, 
              InputManager inputManager ){
         this.Vehicle= Vehicle;
+        this.accelerationPower= accelerationPower;
         this.inputManager= inputManager;      
     }
     
@@ -51,12 +54,14 @@ public class VehicleControls implements ActionListener {
         inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_J));
         inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
+        inputManager.addMapping("Reverse", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Lefts");
         inputManager.addListener(this, "Rights");
         inputManager.addListener(this, "Ups");
         inputManager.addListener(this, "Downs");
         inputManager.addListener(this, "Space");
         inputManager.addListener(this, "Reset");
+        inputManager.addListener(this, "Reverse");
     }
     @Override
     public void onAction(String binding, boolean value, float tpf) {
@@ -77,13 +82,23 @@ public class VehicleControls implements ActionListener {
         } //note that our fancy car actually goes backwards..
         else if (binding.equals("Ups")) {
             if (value) {
-                accelerationValue -= 800;
+                accelerationValue -= accelerationPower;
             } else {
-                accelerationValue += 800;
+                accelerationValue += accelerationPower;
             }
             Vehicle.getController().accelerate(accelerationValue);
             Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));
-        } else if (binding.equals("Downs")) {
+        }
+        else if (binding.equals("Reverse")) {
+            if (value) {
+                accelerationValue += accelerationPower;
+            } else {
+                accelerationValue -= accelerationPower;
+            }
+            Vehicle.getController().accelerate(accelerationValue);
+            Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));
+        }
+        else if (binding.equals("Downs")) {
             if (value) {
                 Vehicle.getController().brake(40f);
             } else {

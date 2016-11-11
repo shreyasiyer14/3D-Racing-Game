@@ -31,12 +31,14 @@ public class Main extends SimpleApplication {
         }
          
         cam.setFrustumFar(150f);
-        flyCam.setMoveSpeed(100);
+      
         
         Ferrari ferrari = new Ferrari (5f, new Vector3f(240f, -50f, 15f), 20f, 400f,assetManager);
         ferrari.initFerrari();
-        VehicleControls Control= new VehicleControls( ferrari , inputManager);
+        VehicleControls Control= new VehicleControls( ferrari ,1000f, inputManager);
         Control.setupKeys();
+        
+        
         Terrain1 terrain =new Terrain1("1st", 65, new Vector3f(0, -100, 0), new Vector3f(2f,1f,2f) , assetManager);
         terrain.init_terrain();
         
