@@ -32,21 +32,15 @@ import com.jme3.input.InputManager;
 public class VehicleControls implements ActionListener {
     
     
-    private Ferrari Vehicle;
-    private VehicleControl player;
-    private AssetManager assetManager; 
+    private Ferrari Vehicle; 
     private float accelerationValue;
     private float steeringValue;
     int BreakPower;
     InputManager inputManager;
-    public VehicleControls(AssetManager assetManager, Ferrari Vehicle, 
-            float Accelaration, InputManager inputManager ){
+    public VehicleControls( Ferrari Vehicle, 
+             InputManager inputManager ){
         this.Vehicle= Vehicle;
-        this.accelerationValue= Accelaration;
-        //this.BreakPower= BreakPower;
-        this.assetManager= assetManager;
-        this.inputManager= inputManager;
-        //player = Vehicle.getController();        
+        this.inputManager= inputManager;      
     }
     
     
@@ -98,7 +92,7 @@ public class VehicleControls implements ActionListener {
         } else if (binding.equals("Reset")) {
             if (value) {
                 System.out.println("Reset");
-                Vehicle.getController().setPhysicsLocation(Vector3f.ZERO);
+                Vehicle.getController().setPhysicsLocation(new Vector3f(240f, -50f, 15f));
                 Vehicle.getController().setPhysicsRotation(new Matrix3f());
                 Vehicle.getController().setLinearVelocity(Vector3f.ZERO);
                 Vehicle.getController().setAngularVelocity(Vector3f.ZERO);

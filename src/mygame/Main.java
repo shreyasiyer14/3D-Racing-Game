@@ -11,6 +11,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.shadow.BasicShadowRenderer;
 import com.jme3.bullet.PhysicsSpace;
+import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import terrain.Terrain1;
 public class Main extends SimpleApplication {
     private BulletAppState physicsEngine;
@@ -29,30 +30,34 @@ public class Main extends SimpleApplication {
          //   viewPort.addProcessor(bsr);
         }
          
-        //PhysicsTestHelper.createPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace());
         cam.setFrustumFar(150f);
-        flyCam.setMoveSpeed(10);
+        flyCam.setMoveSpeed(100);
         
         Ferrari ferrari = new Ferrari (5f, new Vector3f(240f, -50f, 15f), 20f, 400f,assetManager);
         ferrari.initFerrari();
-        VehicleControls Control= new VehicleControls(assetManager, ferrari, ferrari.accelerationValue, inputManager);
+        VehicleControls Control= new VehicleControls( ferrari , inputManager);
         Control.setupKeys();
         Terrain1 terrain =new Terrain1("1st", 65, new Vector3f(0, -100, 0), new Vector3f(2f,1f,2f) , assetManager);
         terrain.init_terrain();
         
         //flyCam.setEnabled(false);
-        CameraNode camNode = new CameraNode("Camera Node", cam);
+        /*CameraNode camNode = new CameraNode("Camera Node", cam);
         camNode.setControlDir(ControlDirection.SpatialToCamera);
         camNode.setLocalTranslation(new Vector3f(0, 4, 12));
         camNode.rotate(0, 22, 0);
-        ferrari.getCarNode().attachChild(camNode);
+        ferrari.getCarNode().attachChild(camNode);*/
+        getPhysicsSpace().add(ferrari.getController());
         
-        DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(0.1f, -0.7f, 0.0f));
+        DirectionalLight dl = new DirectionalLight();
+        dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
+        rootNode.addLight(dl);
+
+        dl = new DirectionalLight();
+        dl.setDirection(new Vector3f(0.5f, -0.1f, 0.3f).normalizeLocal());
         
         rootNode.attachChild(terrain.get_TerrainQuad());
         rootNode.attachChild(ferrari.getCarNode());
-        rootNode.addLight(sun);
+        //rootNode.addLight(dl);
     } 
     
 

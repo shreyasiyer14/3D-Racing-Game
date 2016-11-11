@@ -43,9 +43,7 @@ public class Ferrari {
     private AppStateManager stateManager;
     private AssetManager assetManager;
     
-    public Ferrari () {
-        
-    }
+
     public Ferrari (float scale, Vector3f transform, float speed, float mass, AssetManager assetManager) {
         carScale = scale;
         carTransform = transform;
@@ -54,17 +52,13 @@ public class Ferrari {
         this.assetManager= assetManager;
     }
     public void initFerrari () {
-        ferrariCar = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
-        ferrariCar.setLocalTranslation(carTransform);
-        ferrariCar.scale(carScale);
-        ferrariCar.setShadowMode(ShadowMode.CastAndReceive);
         float stiffness = 120.0f;//200=f1 car
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
-        final float mass = 400;
-
         //Load model and get chassis Geometry
-        
+        ferrariCar = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
+        ferrariCar.setLocalTranslation(carTransform);
+        //ferrariCar.scale(carScale);
         ferrariCar.setShadowMode(ShadowMode.Cast);
         Geometry chasis = getGeometryOfNode(ferrariCar, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();
@@ -73,7 +67,7 @@ public class Ferrari {
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
 
         //Create a vehicle control
-        player = new VehicleControl(carHull, mass);
+        player = new VehicleControl(carHull, carMass);
         ferrariCar.addControl(player);
 
         //Setting default values for wheels
@@ -116,7 +110,6 @@ public class Ferrari {
 
         player.getWheel(2).setFrictionSlip(4);
         player.getWheel(3).setFrictionSlip(4);
-        getPhysicsSpace().add(player);
     }
     public void setCarNode (Node carNode) {
         ferrariCar = carNode;
