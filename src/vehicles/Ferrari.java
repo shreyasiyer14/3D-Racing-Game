@@ -26,13 +26,13 @@ import mygame.VehicleControls;
  * @author EOF-1
  */
 public class Ferrari {
-    private static Node ferrariCar;
-    private static float carScale;
-    private static Vector3f carTransform;
-    private static float carSpeed;
-    private static float carMass;
-    private static Geometry ferrariChassis;
-    private static BoundingBox collider;
+    private Node ferrariCar;
+    private float carScale;
+    private Vector3f carTransform;
+    private float carSpeed;
+    private float carMass;
+    private Geometry ferrariChassis;
+    private BoundingBox collider;
     private BulletAppState bulletAppState;
     private VehicleControl player;
     private VehicleWheel fr, fl, br, bl;
@@ -48,16 +48,18 @@ public class Ferrari {
         carSpeed = speed;
         carMass = mass;
         this.assetManager= assetManager;
+        ferrariCar = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
+
     }
     public void initFerrari () {
         float stiffness = 120.0f;//200=f1 car
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
         //Load model and get chassis Geometry
-        ferrariCar = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
         ferrariCar.setLocalTranslation(carTransform);
-        //ferrariCar.scale(carScale);
+        ferrariCar.scale(carScale);
         ferrariCar.setShadowMode(ShadowMode.Cast);
+        
         Geometry chasis = getGeometryOfNode(ferrariCar, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();
 
@@ -67,12 +69,13 @@ public class Ferrari {
         //Create a vehicle control
         player = new VehicleControl(carHull, carMass);
         ferrariCar.addControl(player);
-
+/*
         //Setting default values for wheels
         player.setSuspensionCompression(compValue * 2.0f * FastMath.sqrt(stiffness));
         player.setSuspensionDamping(dampValue * 2.0f * FastMath.sqrt(stiffness));
         player.setSuspensionStiffness(stiffness);
         player.setMaxSuspensionForce(10000);
+      
 
         //Create four wheels and add them at their locations
         //note that our fancy car actually goes backwards..
@@ -108,6 +111,7 @@ public class Ferrari {
 
         player.getWheel(2).setFrictionSlip(4);
         player.getWheel(3).setFrictionSlip(4);
+        */
     }
     public void setCarNode (Node carNode) {
         ferrariCar = carNode;
