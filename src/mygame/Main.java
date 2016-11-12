@@ -31,26 +31,26 @@ public class Main extends SimpleApplication {
             bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
          //   viewPort.addProcessor(bsr);
         }
-         
-        cam.setFrustumFar(150f);
+        cam.setFrustumFar(1000f);
       
         viewPort.setBackgroundColor(ColorRGBA.White);
-        Ferrari ferrari = new Ferrari (0.3f, new Vector3f(-2.3f, 4f,-2f), 20f, 400f,assetManager);
+        Ferrari ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager);
         ferrari.initFerrari();
-        VehicleControls Control= new VehicleControls( ferrari ,1000f, inputManager);
+        VehicleControls Control= new VehicleControls( ferrari ,1725f, inputManager);
         Control.setupKeys();
         //Terrain1 terrain =new Terrain1("1st", 5, new Vector3f(0, -100, 0), new Vector3f(2f,1f,2f) , assetManager);
         //terrain.init_terrain();
-        Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 13f,assetManager);
+        Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
         
         stage.init_stage1();
         
         //flyCam.setEnabled(false);
         CameraNode camNode = new CameraNode("Camera Node", cam);
         camNode.setControlDir(ControlDirection.SpatialToCamera);
-        camNode.setLocalTranslation(new Vector3f(0, 10, 30));
+        camNode.setLocalTranslation(new Vector3f(0, 4, 12));
         camNode.rotate(0, 22f, 0);
         ferrari.getCarNode().attachChild(camNode);
+        getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
         getPhysicsSpace().add(ferrari.getController());
         
         

@@ -57,7 +57,6 @@ public class Ferrari {
         float dampValue = 0.3f;
         //Load model and get chassis Geometry
         ferrariCar.setLocalTranslation(carTransform);
-        ferrariCar.scale(carScale);
         ferrariCar.setShadowMode(ShadowMode.Cast);
         
         Geometry chasis = getGeometryOfNode(ferrariCar, "Car");
@@ -69,7 +68,7 @@ public class Ferrari {
         //Create a vehicle control
         player = new VehicleControl(carHull, carMass);
         ferrariCar.addControl(player);
-/*
+
         //Setting default values for wheels
         player.setSuspensionCompression(compValue * 2.0f * FastMath.sqrt(stiffness));
         player.setSuspensionDamping(dampValue * 2.0f * FastMath.sqrt(stiffness));
@@ -109,9 +108,13 @@ public class Ferrari {
         player.addWheel(wheel_bl.getParent(), box.getCenter().add(0, -back_wheel_h, 0),
                 wheelDirection, wheelAxle, 0.2f, wheelRadius, false);
 
-        player.getWheel(2).setFrictionSlip(4);
-        player.getWheel(3).setFrictionSlip(4);
-        */
+        player.getWheel(1).setFrictionSlip(2);
+        player.getWheel(3).setFrictionSlip(2);
+        player.getWheel(0).setFrictionSlip(2);
+        player.getWheel(2).setFrictionSlip(2);
+        
+        //ferrariCar.scale(carScale);
+
     }
     public void setCarNode (Node carNode) {
         ferrariCar = carNode;

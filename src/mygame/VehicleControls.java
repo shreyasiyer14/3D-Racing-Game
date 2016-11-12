@@ -48,13 +48,13 @@ public class VehicleControls implements ActionListener {
     
     
     public void setupKeys() {
-        inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_H));
-        inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_U));
-        inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_J));
-        inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
+        inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
-        inputManager.addMapping("Reverse", new KeyTrigger(KeyInput.KEY_R));
+        inputManager.addMapping("Reverse", new KeyTrigger(KeyInput.KEY_S));
         inputManager.addListener(this, "Lefts");
         inputManager.addListener(this, "Rights");
         inputManager.addListener(this, "Ups");
@@ -72,7 +72,7 @@ public class VehicleControls implements ActionListener {
                 steeringValue += -.5f;
             }
             Vehicle.getController().steer(steeringValue);
-        } else if (binding.equals("Rights")) {
+        } if (binding.equals("Rights")) {
             if (value) {
                 steeringValue += -.5f;
             } else {
@@ -80,7 +80,7 @@ public class VehicleControls implements ActionListener {
             }
             Vehicle.getController().steer(steeringValue);
         } //note that our fancy car actually goes backwards..
-        else if (binding.equals("Ups")) {
+        if (binding.equals("Ups")) {
             if (value) {
                 accelerationValue -= accelerationPower;
             } else {
@@ -89,7 +89,7 @@ public class VehicleControls implements ActionListener {
             Vehicle.getController().accelerate(accelerationValue);
             Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));
         }
-        else if (binding.equals("Reverse")) {
+         if (binding.equals("Reverse")) {
             if (value) {
                 accelerationValue += accelerationPower;
             } else {
@@ -98,16 +98,16 @@ public class VehicleControls implements ActionListener {
             Vehicle.getController().accelerate(accelerationValue);
             Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));
         }
-        else if (binding.equals("Downs")) {
+         if (binding.equals("Downs")) {
             if (value) {
-                Vehicle.getController().brake(40f);
+                Vehicle.getController().brake(310f);
             } else {
                 Vehicle.getController().brake(0f);
             }
-        } else if (binding.equals("Reset")) {
+        } if (binding.equals("Reset")) {
             if (value) {
                 System.out.println("Reset");
-                Vehicle.getController().setPhysicsLocation(new Vector3f(240f, -50f, 15f));
+                Vehicle.getController().setPhysicsLocation(new Vector3f(-19f, 18,-2f));
                 Vehicle.getController().setPhysicsRotation(new Matrix3f());
                 Vehicle.getController().setLinearVelocity(Vector3f.ZERO);
                 Vehicle.getController().setAngularVelocity(Vector3f.ZERO);
