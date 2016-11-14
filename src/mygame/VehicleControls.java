@@ -53,7 +53,7 @@ public class VehicleControls implements ActionListener {
         inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addMapping("Reverse", new KeyTrigger(KeyInput.KEY_S));
         inputManager.addListener(this, "Lefts");
@@ -73,14 +73,15 @@ public class VehicleControls implements ActionListener {
                 steeringValue += -.5f;
             }
             vehicle.getController().steer(steeringValue);
-        } if (binding.equals("Rights")) {
+        } 
+        if (binding.equals("Rights")) {
             if (value) {
                 steeringValue += -.5f;
             } else {
                 steeringValue += .5f;
             }
             vehicle.getController().steer(steeringValue);
-        } //note that our fancy car actually goes backwards..
+        } 
         if (binding.equals("Ups")) {
             if (value) {
                 accelerationValue -= accelerationPower;
@@ -90,7 +91,7 @@ public class VehicleControls implements ActionListener {
             vehicle.getController().accelerate(accelerationValue);
             vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(vehicle.getGeometryOfNode(vehicle.getCarNode(), vehicleName)));
         }
-         if (binding.equals("Reverse")) {
+        if (binding.equals("Reverse")) {
             if (value) {
                 accelerationValue += accelerationPower;
             } else {
@@ -99,13 +100,19 @@ public class VehicleControls implements ActionListener {
             vehicle.getController().accelerate(accelerationValue);
             vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(vehicle.getGeometryOfNode(vehicle.getCarNode(), vehicleName)));
         }
-         if (binding.equals("Downs")) {
+        if (binding.equals("Downs")) {
             if (value) {
                 vehicle.getController().brake(310f);
             } else {
                 vehicle.getController().brake(0f);
             }
-        } if (binding.equals("Reset")) {
+        } 
+        if (binding.equals("Space")) {
+            if (value) {
+                System.out.println(vehicle.getCarNode().getLocalTranslation().x + " " + vehicle.getCarNode().getLocalTranslation().y + " " + vehicle.getCarNode().getLocalTranslation().z);
+            }
+        }
+        if (binding.equals("Reset")) {
             if (value) {
                 System.out.println("Reset");
                 vehicle.getController().setPhysicsLocation(new Vector3f(-19f, 18,-2f));
@@ -114,6 +121,7 @@ public class VehicleControls implements ActionListener {
                 vehicle.getController().setAngularVelocity(Vector3f.ZERO);
                 vehicle.getController().resetSuspension();
             } else {
+            
             }
         }
     }

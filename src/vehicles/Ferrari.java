@@ -54,7 +54,6 @@ public class Ferrari extends Vehicle{
         this.assetManager= assetManager;
         Car = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
         matColor = color;
-
     }
     @Override
     public void initVehicle () {
@@ -63,10 +62,9 @@ public class Ferrari extends Vehicle{
         float dampValue = 0.3f;
         //Load model and get chassis Geometry
         //mat = new Material(assetManager, 
-       // "Common/MatDefs/Misc/Unshaded.j3md");
-        
+        //"Common/MatDefs/Misc/Unshaded.j3md"); 
         //mat.setTexture("ColorMap", assetManager.loadTexture("Models/Ferrari/Car.jpg"));
-       //mat.setColor("Color", matColor);
+        //mat.setColor("Color", matColor);
         Car.setLocalTranslation(carTransform);
         Car.setShadowMode(ShadowMode.CastAndReceive);
         Geometry chasis = getGeometryOfNode(Car, "Car");
@@ -123,6 +121,7 @@ public class Ferrari extends Vehicle{
         player.getWheel(2).setFrictionSlip(2);
         Car.addControl(player);
         //ferrariCar.scale(carScale);
+        collider = box;
 
     }
     @Override

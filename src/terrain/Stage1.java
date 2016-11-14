@@ -43,25 +43,24 @@ public class Stage1 {
     
    private AssetManager assetManager;
    private Spatial Scene;
-   private Vector3f LocalTrasnlation;
+   private Vector3f LocalTranslation;
     private float LocalScale;
    
-   public Stage1(Vector3f LocalTrasnlation, float LocalScale, AssetManager assetManager){
+   public Stage1(Vector3f LocalTranslation, float LocalScale, AssetManager assetManager){
        this.assetManager=  assetManager;
        this.LocalScale=LocalScale;
-       this.LocalTrasnlation= LocalTrasnlation;
+       this.LocalTranslation= LocalTranslation;
    }
    private void init_material() {
        
    }
+   
    public void init_stage1(){
        Scene= assetManager.loadModel("Models/Tracks/Race Track/RaceTrack/FullTrack.j3o");
        Scene.scale(LocalScale);
        Scene.setShadowMode(ShadowMode.Receive);
        Scene.addControl(new RigidBodyControl(0));
-       getPhysicsSpace().add(Scene);
-      // Scene.setLocalTranslation(LocalTrasnlation);
-       
+       getPhysicsSpace().add(Scene);       
    }
    public Spatial get_Stage(){
         return Scene;
