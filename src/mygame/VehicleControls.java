@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package mygame;
-import vehicles.Ferrari;
+import vehicles.*;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
@@ -31,19 +31,20 @@ import com.jme3.input.InputManager;
  */
 public class VehicleControls implements ActionListener {
     
-    
-    private final Ferrari Vehicle; 
+    private final String vehicleName;
+    private final Vehicle vehicle; 
     private float accelerationValue;
     private float steeringValue;
     private final float accelerationPower;
     private float jumpPower;
     int BreakPower;
     InputManager inputManager;
-    public VehicleControls( Ferrari Vehicle, float accelerationPower, 
+    public VehicleControls(String name ,Vehicle vehicle, float accelerationPower, 
              InputManager inputManager ){
-        this.Vehicle= Vehicle;
+        this.vehicle= vehicle;
         this.accelerationPower= accelerationPower;
-        this.inputManager= inputManager;      
+        this.inputManager= inputManager;
+        this.vehicleName= name;
     }
     
     
@@ -71,14 +72,14 @@ public class VehicleControls implements ActionListener {
             } else {
                 steeringValue += -.5f;
             }
-            Vehicle.getController().steer(steeringValue);
+            vehicle.getController().steer(steeringValue);
         } if (binding.equals("Rights")) {
             if (value) {
                 steeringValue += -.5f;
             } else {
                 steeringValue += .5f;
             }
-            Vehicle.getController().steer(steeringValue);
+            vehicle.getController().steer(steeringValue);
         } //note that our fancy car actually goes backwards..
         if (binding.equals("Ups")) {
             if (value) {
@@ -86,8 +87,8 @@ public class VehicleControls implements ActionListener {
             } else {
                 accelerationValue += accelerationPower;
             }
-            Vehicle.getController().accelerate(accelerationValue);
-            Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));
+            vehicle.getController().accelerate(accelerationValue);
+            vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(vehicle.getGeometryOfNode(vehicle.getCarNode(), vehicleName)));
         }
          if (binding.equals("Reverse")) {
             if (value) {
@@ -95,23 +96,23 @@ public class VehicleControls implements ActionListener {
             } else {
                 accelerationValue -= accelerationPower;
             }
-            Vehicle.getController().accelerate(accelerationValue);
-            Vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(Vehicle.getGeometryOfNode(Vehicle.getCarNode(), "Car")));
+            vehicle.getController().accelerate(accelerationValue);
+            vehicle.getController().setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(vehicle.getGeometryOfNode(vehicle.getCarNode(), vehicleName)));
         }
          if (binding.equals("Downs")) {
             if (value) {
-                Vehicle.getController().brake(310f);
+                vehicle.getController().brake(310f);
             } else {
-                Vehicle.getController().brake(0f);
+                vehicle.getController().brake(0f);
             }
         } if (binding.equals("Reset")) {
             if (value) {
                 System.out.println("Reset");
-                Vehicle.getController().setPhysicsLocation(new Vector3f(-19f, 18,-2f));
-                Vehicle.getController().setPhysicsRotation(new Matrix3f());
-                Vehicle.getController().setLinearVelocity(Vector3f.ZERO);
-                Vehicle.getController().setAngularVelocity(Vector3f.ZERO);
-                Vehicle.getController().resetSuspension();
+                vehicle.getController().setPhysicsLocation(new Vector3f(-19f, 18,-2f));
+                vehicle.getController().setPhysicsRotation(new Matrix3f());
+                vehicle.getController().setLinearVelocity(Vector3f.ZERO);
+                vehicle.getController().setAngularVelocity(Vector3f.ZERO);
+                vehicle.getController().resetSuspension();
             } else {
             }
         }
