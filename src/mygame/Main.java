@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import terrain.*;
 public class Main extends SimpleApplication {
     private BulletAppState physicsEngine;
+    private AICar bot;
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -49,12 +50,13 @@ public class Main extends SimpleApplication {
         //Vehicle ferrari2 = new Ferrari (0.5f, new Vector3f(-19f, 18,-6f), 20f, 1000f,assetManager, ColorRGBA.Yellow);
         //ferrari2.initVehicle();
         
-        AICar bot = new AICar(0.5f, 20f, 1000f, assetManager);
+        bot = new AICar(0.5f, 20f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        bot.AIAccelerate();
         //VehicleControls Control1= new VehicleControls( "Car", ferrari2 ,1725f, inputManager);
         //Control1.setupKeys();
         //Terrain1 terrain =new Terrain1("1st", 5, new Vector3f(0, -100, 0), new Vector3f(2f,1f,2f) , assetManager);
@@ -70,8 +72,7 @@ public class Main extends SimpleApplication {
         camNode.rotate(0, 22f, 0);
         ferrari.getCarNode().attachChild(camNode);
         getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
-        getPhysicsSpace().add(ferrari.getController());
-        getPhysicsSpace().add(bot.getController());
+
         //getPhysicsSpace().add(ferrari2.getController());
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
@@ -83,7 +84,11 @@ public class Main extends SimpleApplication {
         //rootNode.attachChild(ferrari2.getCarNode());
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
-        //rootNode.attachChild (terrain.get_TerrainQuad());
-        //rootNode.addLight(dl);
+    }
+    
+    @Override
+    public void simpleUpdate(float tpf) {
+        bot.AIUpdate();
+        bot.AIMove();
     }
 }

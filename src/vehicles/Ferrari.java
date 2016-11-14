@@ -122,6 +122,7 @@ public class Ferrari extends Vehicle{
         Car.addControl(player);
         //ferrariCar.scale(carScale);
         collider = box;
+        getPhysicsSpace().add(Car);
 
     }
     @Override

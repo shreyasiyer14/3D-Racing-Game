@@ -9,6 +9,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
+import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.bullet.objects.VehicleWheel;
@@ -46,6 +47,7 @@ public class AICar {
     private AssetManager assetManager;
     private Node Car;
     private Vector pathTraceCoords;
+    private int i = 0;
     
     public AICar(float scale, float speed, float mass, AssetManager assetManager) {
         carScale = scale;
@@ -66,20 +68,19 @@ public class AICar {
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
         Car.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-
+        
         Geometry chasis = getGeometryOfNode(Car, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
-
+        
         //Create a vehicle control
         player = new VehicleControl(carHull, carMass/10f);
-
+        
         //Setting default values for wheels
         player.setSuspensionCompression(compValue * 2.0f * FastMath.sqrt(stiffness));
         player.setSuspensionDamping(dampValue * 2.0f * FastMath.sqrt(stiffness));
         player.setSuspensionStiffness(stiffness);
         player.setMaxSuspensionForce(10000);
-      
 
         //Create four wheels and add them at their locations
         //note that our fancy car actually goes backwards..
@@ -117,9 +118,12 @@ public class AICar {
         player.getWheel(3).setFrictionSlip(2);
         player.getWheel(0).setFrictionSlip(2);
         player.getWheel(2).setFrictionSlip(2);
-        
         AIMove();
+        AIUpdate();
+
         Car.addControl(player);
+        getPhysicsSpace().add(Car);
+
     }
     
     public void initTracingCoordinates() throws IOException {
@@ -156,10 +160,20 @@ public class AICar {
         return Car;
     }
     public void AIMove() {
-        Car.lookAt(new Vector3f(currentCoordX, currentCoordY, currentCoordZ), Vector3f.UNIT_X);
-        player.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(getGeometryOfNode(Car, "Car")));
-        player.applyWheelTransforms();
-        
+        Car.lookAt(new Vector3f(currentCoordX, currentCoordY, currentCoordZ), Vector3f.UNIT_Y);
+    }
+    public void AIAccelerate() { 
+        player.accelerate(-70f);
+        player.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(getGeometryOfNode(Car, "Car")));        
+    }
+    public void AIUpdate() {
+        if (Car.getLocalTranslation().x > currentCoordX)  {
+            i += 3;
+        }
+        currentCoordX = (Float)pathTraceCoords.get(0 + i);
+        currentCoordY = (Float)pathTraceCoords.get(1 + i);
+        currentCoordZ = (Float)pathTraceCoords.get(2 + i);
+        //AIAccelerate();
     }
 }
 
