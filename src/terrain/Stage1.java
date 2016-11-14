@@ -29,6 +29,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
@@ -50,13 +51,13 @@ public class Stage1 {
        this.LocalScale=LocalScale;
        this.LocalTrasnlation= LocalTrasnlation;
    }
-   private void init_material()
-   {
+   private void init_material() {
        
    }
    public void init_stage1(){
        Scene= assetManager.loadModel("Models/Tracks/Race Track/RaceTrack/FullTrack.j3o");
        Scene.scale(LocalScale);
+       Scene.setShadowMode(ShadowMode.Receive);
        Scene.addControl(new RigidBodyControl(0));
        getPhysicsSpace().add(Scene);
       // Scene.setLocalTranslation(LocalTrasnlation);

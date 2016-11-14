@@ -32,10 +32,10 @@ import com.jme3.input.InputManager;
 public class VehicleControls implements ActionListener {
     
     
-    private Ferrari Vehicle; 
+    private final Ferrari Vehicle; 
     private float accelerationValue;
     private float steeringValue;
-    private float accelerationPower;
+    private final float accelerationPower;
     private float jumpPower;
     int BreakPower;
     InputManager inputManager;

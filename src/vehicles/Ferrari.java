@@ -57,7 +57,7 @@ public class Ferrari {
         float dampValue = 0.3f;
         //Load model and get chassis Geometry
         ferrariCar.setLocalTranslation(carTransform);
-        ferrariCar.setShadowMode(ShadowMode.Cast);
+        ferrariCar.setShadowMode(ShadowMode.CastAndReceive);
         
         Geometry chasis = getGeometryOfNode(ferrariCar, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();

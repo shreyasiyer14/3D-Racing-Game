@@ -29,7 +29,7 @@ public class Main extends SimpleApplication {
          if (settings.getRenderer().startsWith("LWJGL")) {
             BasicShadowRenderer bsr = new BasicShadowRenderer(assetManager, 512);
             bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
-         //   viewPort.addProcessor(bsr);
+            viewPort.addProcessor(bsr);
         }
         cam.setFrustumFar(1000f);
       
