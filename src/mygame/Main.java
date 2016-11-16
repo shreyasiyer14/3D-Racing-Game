@@ -23,6 +23,7 @@ import terrain.*;
 public class Main extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
+    private Vehicle ferrari;
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -41,14 +42,10 @@ public class Main extends SimpleApplication {
       
         viewPort.setBackgroundColor(ColorRGBA.White);
         
-        Vehicle ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
+        ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
         VehicleControls Control= new VehicleControls("Car", ferrari ,1725f, inputManager);
         Control.setupKeys();
-        
-        
-        //Vehicle ferrari2 = new Ferrari (0.5f, new Vector3f(-19f, 18,-6f), 20f, 1000f,assetManager, ColorRGBA.Yellow);
-        //ferrari2.initVehicle();
         
         bot = new AICar(0.5f, 20f, 1000f, assetManager);
         try {
@@ -56,15 +53,10 @@ public class Main extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        bot.AIAccelerate();
-        //VehicleControls Control1= new VehicleControls( "Car", ferrari2 ,1725f, inputManager);
-        //Control1.setupKeys();
-        //Terrain1 terrain =new Terrain1("1st", 5, new Vector3f(0, -100, 0), new Vector3f(2f,1f,2f) , assetManager);
-        //terrain.init_terrain();
         Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
         
         stage.init_stage1();
-        
+        //flyCam.setMoveSpeed(100f);
         //flyCam.setEnabled(false);
         CameraNode camNode = new CameraNode("Camera Node", cam);
         camNode.setControlDir(ControlDirection.SpatialToCamera);
@@ -72,16 +64,11 @@ public class Main extends SimpleApplication {
         camNode.rotate(0, 22f, 0);
         ferrari.getCarNode().attachChild(camNode);
         getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
-
-        //getPhysicsSpace().add(ferrari2.getController());
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
         rootNode.addLight(dl);
 
-        dl = new DirectionalLight();
-        dl.setDirection(new Vector3f(0.5f, 0.0f, 0.3f).normalizeLocal());
         rootNode.attachChild(ferrari.getCarNode());
-        //rootNode.attachChild(ferrari2.getCarNode());
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
     }
@@ -89,6 +76,5 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         bot.AIUpdate();
-        bot.AIMove();
     }
 }

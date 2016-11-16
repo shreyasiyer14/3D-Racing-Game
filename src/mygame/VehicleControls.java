@@ -109,7 +109,7 @@ public class VehicleControls implements ActionListener {
         } 
         if (binding.equals("Space")) {
             if (value) {
-                System.out.println(vehicle.getCarNode().getLocalTranslation().x + " " + vehicle.getCarNode().getLocalTranslation().y + " " + vehicle.getCarNode().getLocalTranslation().z);
+                System.out.println(vehicle.getCarNode().getLocalTranslation().x + " " + vehicle.getCarNode().getLocalRotation().getY() + " " + vehicle.getCarNode().getLocalTranslation().z);
             }
         }
         if (binding.equals("Reset")) {

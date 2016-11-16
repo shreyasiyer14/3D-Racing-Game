@@ -11,6 +11,7 @@ import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.bullet.util.CollisionShapeFactory;
@@ -35,9 +36,9 @@ public class AICar {
     private float carScale;
     private float carSpeed;
     private float carMass;
-    private float currentCoordX;
-    private float currentCoordY;
-    private float currentCoordZ;
+    public float currentCoordX;
+    public float currentCoordY;
+    public float currentCoordZ;
 
     private Geometry ferrariChassis;
     private BoundingBox collider;
@@ -48,7 +49,7 @@ public class AICar {
     private Node Car;
     private Vector pathTraceCoords;
     private int i = 0;
-    
+    private RigidBodyControl rbc;
     public AICar(float scale, float speed, float mass, AssetManager assetManager) {
         carScale = scale;
         carSpeed = speed;
@@ -60,22 +61,27 @@ public class AICar {
     
     public void initAICar() throws IOException {
         initTracingCoordinates();
-        currentCoordX = (Float)pathTraceCoords.get(0);
-        currentCoordY = (Float)pathTraceCoords.get(1);
-        currentCoordZ = (Float)pathTraceCoords.get(2);
-        Car.setLocalTranslation((Float)pathTraceCoords.get(3), (Float)pathTraceCoords.get(4), (Float)pathTraceCoords.get(5));
+        Car.setLocalTranslation((Float)pathTraceCoords.get(0), (Float)pathTraceCoords.get(1), (Float)pathTraceCoords.get(2));
+
+        currentCoordX = (Float)pathTraceCoords.get(3);
+        currentCoordY = (Float)pathTraceCoords.get(4);
+        currentCoordZ = (Float)pathTraceCoords.get(5);
         float stiffness = 120.0f;//200=f1 car
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
         Car.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        
+                
         Geometry chasis = getGeometryOfNode(Car, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
-        
+        rbc = new RigidBodyControl(carMass);
+        Car.addControl(rbc);
+        rbc.setKinematicSpatial(true);
+        /*
         //Create a vehicle control
-        player = new VehicleControl(carHull, carMass/10f);
-        
+        player = new VehicleControl(carHull, carMass);
+        //Car.addControl(player);
+
         //Setting default values for wheels
         player.setSuspensionCompression(compValue * 2.0f * FastMath.sqrt(stiffness));
         player.setSuspensionDamping(dampValue * 2.0f * FastMath.sqrt(stiffness));
@@ -119,9 +125,8 @@ public class AICar {
         player.getWheel(0).setFrictionSlip(2);
         player.getWheel(2).setFrictionSlip(2);
         AIMove();
-        AIUpdate();
-
-        Car.addControl(player);
+        */
+        //Car.addControl(player);
         getPhysicsSpace().add(Car);
 
     }
@@ -161,19 +166,25 @@ public class AICar {
     }
     public void AIMove() {
         Car.lookAt(new Vector3f(currentCoordX, currentCoordY, currentCoordZ), Vector3f.UNIT_Y);
+        Car.setLocalRotation(Car.getLocalRotation().opposite());
+        Car.move(new Vector3f((currentCoordX - Car.getLocalTranslation().x)*0.05f, (currentCoordY - Car.getLocalTranslation().y)*0.05f, (currentCoordZ - Car.getLocalTranslation().z)*0.05f));
+        rbc.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(getGeometryOfNode(Car, "Car")));        
     }
     public void AIAccelerate() { 
-        player.accelerate(-70f);
-        player.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(getGeometryOfNode(Car, "Car")));        
+        //Car.move(0.2f, 0.0f, 0.0f );
+        //player.accelerate(-700f);
     }
     public void AIUpdate() {
-        if (Car.getLocalTranslation().x > currentCoordX)  {
+        if (Car.getLocalTranslation().distance(new Vector3f(currentCoordX, currentCoordY, currentCoordZ)) < 3.0f) {
             i += 3;
         }
-        currentCoordX = (Float)pathTraceCoords.get(0 + i);
-        currentCoordY = (Float)pathTraceCoords.get(1 + i);
-        currentCoordZ = (Float)pathTraceCoords.get(2 + i);
-        //AIAccelerate();
+        if (i < pathTraceCoords.size() - 5) {
+            currentCoordX = (Float)pathTraceCoords.get(3 + i);
+            currentCoordY = (Float)pathTraceCoords.get(4 + i);
+            currentCoordZ = (Float)pathTraceCoords.get(5 + i);
+        }
+        AIMove();
+        AIAccelerate();
     }
 }
 
