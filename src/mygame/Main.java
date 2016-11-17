@@ -1,19 +1,14 @@
 package mygame;
 import ai.AICar;
+import mygame.VehicleCamera;
 import vehicles.*;
-import util.TextLoader;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.shadow.BasicShadowRenderer;
-import com.jme3.bullet.PhysicsSpace;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import java.io.IOException;
@@ -39,7 +34,6 @@ public class Main extends SimpleApplication {
             viewPort.addProcessor(bsr);
         }
         cam.setFrustumFar(1000f);
-      
         viewPort.setBackgroundColor(ColorRGBA.White);
         
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
@@ -53,17 +47,16 @@ public class Main extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
         
+        Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
         stage.init_stage1();
-        //flyCam.setMoveSpeed(100f);
-        //flyCam.setEnabled(false);
-        CameraNode camNode = new CameraNode("Camera Node", cam);
-        camNode.setControlDir(ControlDirection.SpatialToCamera);
-        camNode.setLocalTranslation(new Vector3f(0, 4, 12));
-        camNode.rotate(0, 22f, 0);
-        ferrari.getCarNode().attachChild(camNode);
+        
+        VehicleCamera vcam = new VehicleCamera("Camera Node", new Vector3f(0f,4f,12f), new Vector3f(0f,22f,0f), cam);
+        vcam.initCamera();
+        ferrari.getCarNode().attachChild(vcam.getCamera());
+        
         getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
+        
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
         rootNode.addLight(dl);

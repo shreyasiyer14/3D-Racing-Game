@@ -13,9 +13,8 @@ import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.control.VehicleControl;
-import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
@@ -30,12 +29,10 @@ import util.TextLoader;
  * @author EOF-1
  */
 public class AICar {
-    private VehicleWheel fr, fl, br, bl;
-    private Node node_fr, node_fl, node_br, node_bl;
-    private float wheelRadius;
-    private float carScale;
-    private float carSpeed;
-    private float carMass;
+    Geometry wheel_fl, wheel_fr, wheel_br, wheel_bl;
+    private final float carScale;
+    private final float carSpeed;
+    private final float carMass;
     public float currentCoordX;
     public float currentCoordY;
     public float currentCoordZ;
@@ -45,9 +42,9 @@ public class AICar {
     private BulletAppState bulletAppState;
     private VehicleControl player;
     private AppStateManager stateManager;
-    private AssetManager assetManager;
-    private Node Car;
-    private Vector pathTraceCoords;
+    private final AssetManager assetManager;
+    private final Node Car;
+    private final Vector pathTraceCoords;
     private int i = 0;
     private RigidBodyControl rbc;
     public AICar(float scale, float speed, float mass, AssetManager assetManager) {
@@ -66,8 +63,8 @@ public class AICar {
         currentCoordX = (Float)pathTraceCoords.get(3);
         currentCoordY = (Float)pathTraceCoords.get(4);
         currentCoordZ = (Float)pathTraceCoords.get(5);
-        float stiffness = 120.0f;//200=f1 car
-        float compValue = 0.2f; //(lower than damp!)
+        float stiffness = 120.0f;
+        float compValue = 0.2f; 
         float dampValue = 0.3f;
         Car.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
                 
@@ -77,56 +74,14 @@ public class AICar {
         rbc = new RigidBodyControl(carMass);
         Car.addControl(rbc);
         rbc.setKinematicSpatial(true);
-        /*
-        //Create a vehicle control
-        player = new VehicleControl(carHull, carMass);
-        //Car.addControl(player);
 
-        //Setting default values for wheels
-        player.setSuspensionCompression(compValue * 2.0f * FastMath.sqrt(stiffness));
-        player.setSuspensionDamping(dampValue * 2.0f * FastMath.sqrt(stiffness));
-        player.setSuspensionStiffness(stiffness);
-        player.setMaxSuspensionForce(10000);
+        wheel_fr = getGeometryOfNode(Car, "WheelFrontRight");
 
-        //Create four wheels and add them at their locations
-        //note that our fancy car actually goes backwards..
-        Vector3f wheelDirection = new Vector3f(0, -1, 0);
-        Vector3f wheelAxle = new Vector3f(-1, 0, 0);
+        wheel_fl = getGeometryOfNode(Car, "WheelFrontLeft");
 
-        Geometry wheel_fr = getGeometryOfNode(Car, "WheelFrontRight");
-        wheel_fr.center();
-        box = (BoundingBox) wheel_fr.getModelBound();
-        wheelRadius = box.getYExtent();
-        float back_wheel_h = (wheelRadius * 1.7f) - 1f;
-        float front_wheel_h = (wheelRadius * 1.9f) - 1f;
-        player.addWheel(wheel_fr.getParent(), box.getCenter().add(0, -front_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, true);
-
-        Geometry wheel_fl = getGeometryOfNode(Car, "WheelFrontLeft");
-        wheel_fl.center();
-        box = (BoundingBox) wheel_fl.getModelBound();
-        player.addWheel(wheel_fl.getParent(), box.getCenter().add(0, -front_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, true);
-
-        Geometry wheel_br = getGeometryOfNode(Car, "WheelBackRight");
-        wheel_br.center();
-        box = (BoundingBox) wheel_br.getModelBound();
-        player.addWheel(wheel_br.getParent(), box.getCenter().add(0, -back_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, false);
-
-        Geometry wheel_bl = getGeometryOfNode(Car, "WheelBackLeft");
-        wheel_bl.center();
-        box = (BoundingBox) wheel_bl.getModelBound();
-        player.addWheel(wheel_bl.getParent(), box.getCenter().add(0, -back_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, false);
-
-        player.getWheel(1).setFrictionSlip(2);
-        player.getWheel(3).setFrictionSlip(2);
-        player.getWheel(0).setFrictionSlip(2);
-        player.getWheel(2).setFrictionSlip(2);
-        AIMove();
-        */
-        //Car.addControl(player);
+        wheel_br = getGeometryOfNode(Car, "WheelBackRight");
+        
+        wheel_bl = getGeometryOfNode(Car, "WheelBackLeft");
         getPhysicsSpace().add(Car);
 
     }
@@ -185,6 +140,14 @@ public class AICar {
         }
         AIMove();
         AIAccelerate();
+        //UpdateWheels();
+    }
+    
+    public void UpdateWheels() {
+        wheel_fl.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
+        wheel_fr.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
+        wheel_bl.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
+        wheel_br.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
     }
 }
 
