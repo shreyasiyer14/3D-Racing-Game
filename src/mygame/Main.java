@@ -44,10 +44,10 @@ public class Main extends SimpleApplication {
         
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
-        VehicleControls Control= new VehicleControls("Car", ferrari ,1725f, inputManager);
+        VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
         Control.setupKeys();
         
-        bot = new AICar(0.5f, 20f, 1000f, assetManager);
+        bot = new AICar(0.5f, 4f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {

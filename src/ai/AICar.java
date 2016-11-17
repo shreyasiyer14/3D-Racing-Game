@@ -167,7 +167,7 @@ public class AICar {
     public void AIMove() {
         Car.lookAt(new Vector3f(currentCoordX, currentCoordY, currentCoordZ), Vector3f.UNIT_Y);
         Car.setLocalRotation(Car.getLocalRotation().opposite());
-        Car.move(new Vector3f((currentCoordX - Car.getLocalTranslation().x)*0.05f, (currentCoordY - Car.getLocalTranslation().y)*0.05f, (currentCoordZ - Car.getLocalTranslation().z)*0.05f));
+        Car.move(new Vector3f((currentCoordX - Car.getLocalTranslation().x), (currentCoordY - Car.getLocalTranslation().y), (currentCoordZ - Car.getLocalTranslation().z)).normalize().divide(carSpeed));
         rbc.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(getGeometryOfNode(Car, "Car")));        
     }
     public void AIAccelerate() { 
