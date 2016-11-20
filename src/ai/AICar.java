@@ -73,6 +73,7 @@ public class AICar {
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
         rbc = new RigidBodyControl(carMass);
         Car.addControl(rbc);
+        rbc.setKinematic(true);
         rbc.setKinematicSpatial(true);
 
         wheel_fr = getGeometryOfNode(Car, "WheelFrontRight");
@@ -130,6 +131,7 @@ public class AICar {
         //player.accelerate(-700f);
     }
     public void AIUpdate() {
+        rbc.setPhysicsLocation(Car.getLocalTranslation());
         if (Car.getLocalTranslation().distance(new Vector3f(currentCoordX, currentCoordY, currentCoordZ)) < 3.0f) {
             i += 3;
         }
@@ -140,6 +142,7 @@ public class AICar {
         }
         AIMove();
         AIAccelerate();
+
         //UpdateWheels();
     }
     
