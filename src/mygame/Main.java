@@ -9,6 +9,7 @@ import com.jme3.scene.CameraNode;
 import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.shadow.BasicShadowRenderer;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
+import com.jme3.input.event.KeyInputEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import java.io.IOException;
@@ -40,7 +41,6 @@ public class Main extends SimpleApplication {
         ferrari.initVehicle();
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
         Control.setupKeys();
-        
         bot = new AICar(0.5f, 2f, 1000f, assetManager);
         try {
             bot.initAICar();
