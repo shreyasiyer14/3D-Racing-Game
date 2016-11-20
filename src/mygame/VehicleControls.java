@@ -109,7 +109,5 @@ public class VehicleControls implements ActionListener {
             
             }
         }
-        System.out.println(vehicle.getCarNode().getLocalTranslation().x + " " + vehicle.getCarNode().getLocalTranslation().y + " " + vehicle.getCarNode().getLocalTranslation().z);
-
     }
 }

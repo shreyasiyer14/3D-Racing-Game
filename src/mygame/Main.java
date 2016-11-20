@@ -36,7 +36,7 @@ public class Main extends SimpleApplication {
         }
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
-        
+
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
@@ -68,6 +68,9 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleUpdate(float tpf) {
+        listener.setLocation(cam.getLocation());
+        listener.setRotation(cam.getRotation());
+        //System.out.println(ferrari.getCarNode().getLocalTranslation().x + " " + ferrari.getCarNode().getLocalTranslation().y + " " + ferrari.getCarNode().getLocalTranslation().z);
         bot.AIUpdate();
     }
 }
