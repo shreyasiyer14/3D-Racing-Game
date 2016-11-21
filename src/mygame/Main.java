@@ -39,7 +39,7 @@ public class Main extends SimpleApplication {
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
 
-        lapManager = new LapManager(new Vector3f(-8.533742f, 14.419444f, -20.350176f), 3);
+        lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
@@ -74,6 +74,7 @@ public class Main extends SimpleApplication {
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
+        
         //System.out.println(ferrari.getCarNode().getLocalTranslation().x + " " + ferrari.getCarNode().getLocalTranslation().y + " " + ferrari.getCarNode().getLocalTranslation().z);
         bot.AIUpdate();
     }

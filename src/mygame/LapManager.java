@@ -8,6 +8,7 @@ package mygame;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -30,10 +31,11 @@ public class LapManager {
         BitmapText helloText = new BitmapText(guiFont, false);
         helloText.setSize(guiFont.getCharSet().getRenderedSize());
         helloText.setText("Lap: " + (3 - lapCount) + "/" + "3");
-        helloText.setLocalTranslation(300, helloText.getLineHeight(), 0);
+        helloText.setColor(ColorRGBA.Red);
+        helloText.setLocalTranslation(100, helloText.getLineHeight() + 300, 0);
         guiNode.attachChild(helloText);
 
-        if (vehicleTransform.distance(startPoint) <= 5.0f) {
+        if (vehicleTransform.distance(startPoint) <= 7.0f) {
             if (lapCount == 0)
                 System.out.println("DONE");
             else {
@@ -43,9 +45,11 @@ public class LapManager {
                 }
             }
         }
-        if (vehicleTransform.distance(startPoint) > 5.0f) {
+        if (vehicleTransform.distance(startPoint) > 7.0f) {
             justCompleted = false;
         }
     }
-    
+    public int getLapCount() {
+        return lapCount;
+    }
 }

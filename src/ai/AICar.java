@@ -140,6 +140,12 @@ public class AICar {
             currentCoordY = (Float)pathTraceCoords.get(4 + i);
             currentCoordZ = (Float)pathTraceCoords.get(5 + i);
         }
+        else if (i > pathTraceCoords.size() - 5) {
+            i = 0;
+            currentCoordX = (Float)pathTraceCoords.get(3 + i);
+            currentCoordY = (Float)pathTraceCoords.get(4 + i);
+            currentCoordZ = (Float)pathTraceCoords.get(5 + i);
+        }
         AIMove();
         AIAccelerate();
 
