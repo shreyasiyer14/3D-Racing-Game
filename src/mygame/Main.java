@@ -9,6 +9,7 @@ import com.jme3.scene.CameraNode;
 import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.shadow.BasicShadowRenderer;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
+import com.jme3.font.BitmapText;
 import com.jme3.input.event.KeyInputEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -20,6 +21,7 @@ public class Main extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
     private Vehicle ferrari;
+    LapManager lapManager;
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -37,6 +39,7 @@ public class Main extends SimpleApplication {
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
 
+        lapManager = new LapManager(new Vector3f(-8.533742f, 14.419444f, -20.350176f), 3);
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
@@ -70,6 +73,7 @@ public class Main extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
+        lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
         //System.out.println(ferrari.getCarNode().getLocalTranslation().x + " " + ferrari.getCarNode().getLocalTranslation().y + " " + ferrari.getCarNode().getLocalTranslation().z);
         bot.AIUpdate();
     }
