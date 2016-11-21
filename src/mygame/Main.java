@@ -13,6 +13,9 @@ import com.jme3.font.BitmapText;
 import com.jme3.input.event.KeyInputEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.network.Client;
+import com.jme3.network.Network;
+import com.jme3.system.JmeContext;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,11 +27,18 @@ public class Main extends SimpleApplication {
     LapManager lapManager;
     public static void main(String[] args) {
         Main app = new Main();
-        app.start();
+        app.start(JmeContext.Type.Display);
     }
 
     @Override
     public void simpleInitApp() {
+        Client myClient;
+        try {
+            myClient = Network.connectToServer("localhost", 6143);
+            myClient.start();
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         physicsEngine = new BulletAppState();
         stateManager.attach(physicsEngine);
          if (settings.getRenderer().startsWith("LWJGL")) {
