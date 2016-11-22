@@ -34,7 +34,10 @@ public class Main extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
     private Vehicle ferrari;
+    
     private Node opponent;
+    RigidBodyControl rbc;
+    
     LapManager lapManager;
     
     public Client myClient;
@@ -68,7 +71,6 @@ public class Main extends SimpleApplication {
         }
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
-
         
         inputManager.setCursorVisible(true);
         
@@ -81,7 +83,7 @@ public class Main extends SimpleApplication {
         Geometry chasis = Vehicle.getGeometryOfNode(opponent, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
-        RigidBodyControl rbc = new RigidBodyControl(1000f);
+        rbc = new RigidBodyControl(1000f);
         opponent.addControl(rbc);
         rbc.setKinematic(true);
         rbc.setKinematicSpatial(true);
@@ -152,8 +154,9 @@ public class Main extends SimpleApplication {
                 Main.this.enqueue(new Callable() {
                     @Override
                     public Object call() throws Exception {
-                        opponent.setLocalTranslation(posMsg.getPosition());
+                        opponent.setLocalTranslation(posMsg.getPosition());                 
                         opponent.setLocalRotation(posMsg.getRotation());
+                        rbc.setPhysicsLocation(opponent.getLocalTranslation());
                         return null;
                     }
                 });            
