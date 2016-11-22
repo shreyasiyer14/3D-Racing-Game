@@ -55,7 +55,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            myClient = Network.connectToServer("172.16.84.255", UtNetworking.PORT);
+            myClient = Network.connectToServer("localhost", UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,6 +87,7 @@ public class Main extends SimpleApplication {
         opponent.addControl(rbc);
         rbc.setKinematic(true);
         rbc.setKinematicSpatial(true);
+        getPhysicsSpace().add(opponent);
         
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager, this);
         Control.setupKeys();
