@@ -29,9 +29,9 @@ public class VehicleControls implements ActionListener {
     private float jumpPower;
     int BreakPower;
     InputManager inputManager;
-    Main sapp;
+    ClientMain sapp;
     public VehicleControls(String name ,Vehicle vehicle, float accelerationPower, 
-             InputManager inputManager, Main app){
+             InputManager inputManager, ClientMain app){
         this.vehicle= vehicle;
         this.accelerationPower= accelerationPower;
         this.inputManager= inputManager;

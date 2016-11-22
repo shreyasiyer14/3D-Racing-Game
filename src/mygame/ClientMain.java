@@ -3,22 +3,17 @@ import ai.AICar;
 import vehicles.*;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
-import com.jme3.bounding.BoundingBox;
 import com.jme3.light.DirectionalLight;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.shadow.BasicShadowRenderer;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
-import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -28,9 +23,8 @@ import java.util.logging.Logger;
 import network.UtNetworking;
 import network.UtNetworking.NetworkMessage;
 import network.UtNetworking.PosAndRotMessage;
-import network.UtNetworking.PositionMessage;
 import terrain.*;
-public class Main extends SimpleApplication {
+public class ClientMain extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
     private Vehicle ferrari;
@@ -44,11 +38,11 @@ public class Main extends SimpleApplication {
     ConcurrentLinkedQueue<String> messageQueue;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
-        Main app = new Main();
+        ClientMain app = new ClientMain();
         app.start(JmeContext.Type.Display);
     }
 
-    public Main() {
+    public ClientMain() {
         super(new StatsAppState());
     }
     @Override
@@ -58,7 +52,7 @@ public class Main extends SimpleApplication {
             myClient = Network.connectToServer("localhost", UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         messageQueue = new ConcurrentLinkedQueue<String>();
         myClient.addMessageListener(new NetworkMessageListener());
@@ -85,14 +79,14 @@ public class Main extends SimpleApplication {
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager, this);
         Control.setupKeys(); 
         
-        opponent = new Opponent(new Vector3f(-19f, 18,-2f), 1000f, assetManager);
+        opponent = new Opponent(new Vector3f(0f,-100f,0f), 1000f, assetManager);
         opponent.initOpponent();
 
         bot = new AICar(0.5f, 2f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
@@ -130,7 +124,6 @@ public class Main extends SimpleApplication {
     
     @Override
     public void destroy() {
-       // myClient.
         myClient.close();
         super.destroy();
     }
@@ -143,7 +136,7 @@ public class Main extends SimpleApplication {
                 messageQueue.add(message.getMessage());
             } else if (m instanceof PosAndRotMessage) {
                 final PosAndRotMessage posMsg = (PosAndRotMessage) m;
-                Main.this.enqueue(new Callable() {
+                ClientMain.this.enqueue(new Callable() {
                     @Override
                     public Object call() throws Exception {
                         opponent.getCarNode().setLocalTranslation(posMsg.getPosition());                 

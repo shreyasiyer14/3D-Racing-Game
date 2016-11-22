@@ -64,14 +64,11 @@ public class ServerMain extends SimpleApplication {
                         break;
                     }
                 }
-                System.out.println((2 - otherClientIndex - 1) + " " + otherClientIndex);
                 if (m instanceof PosAndRotMessage) {
-                     PosAndRotMessage msg = (PosAndRotMessage) m;
+                    PosAndRotMessage msg = (PosAndRotMessage) m;
                     Vector3f pos = msg.getPosition();
                     Quaternion rot = msg.getRotation();
-               
-                //    myServer.getConnection(otherClientIndex).send(new PosAndRotMessage(pos,rot));
-                
+                             
                     myServer.broadcast(Filters.in(col.toArray()[otherClientIndex]), new PosAndRotMessage(pos,rot));
                 }
            }
