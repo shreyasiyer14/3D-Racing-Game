@@ -38,10 +38,11 @@ public class ClientMain extends SimpleApplication {
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
-        ClientMain mainapp = new ClientMain();
-        mainapp.start(JmeContext.Type.Display);
+        UtNetworking.initialiseSerializables();
+        ClientMain app = new ClientMain();
+        app.start(JmeContext.Type.Display);
     }
-    
+
     public ClientMain() {
         super(new StatsAppState());
     }
@@ -51,7 +52,7 @@ public class ClientMain extends SimpleApplication {
             myClient = Network.connectToServer("localhost", UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         messageQueue = new ConcurrentLinkedQueue<String>();
         myClient.addMessageListener(new NetworkMessageListener());
@@ -85,7 +86,7 @@ public class ClientMain extends SimpleApplication {
         try {
             bot.initAICar();
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
