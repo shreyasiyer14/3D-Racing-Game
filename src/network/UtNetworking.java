@@ -15,7 +15,7 @@ import com.jme3.network.serializing.Serializer;
  * @author EOF-1
  */
 public class UtNetworking {
-    public static final int PORT = 6000;
+    public static final int PORT = 6143;
     
     public static void initialiseSerializables() {
         Serializer.registerClass(NetworkMessage.class);
@@ -27,6 +27,9 @@ public class UtNetworking {
     public static class PosAndRotMessage extends AbstractMessage {
         private Vector3f position;
         private Vector3f rotation;
+        public PosAndRotMessage() {
+            
+        }
         public PosAndRotMessage(Vector3f pos, Vector3f rot) {
             position = pos;
             rotation = rot;
@@ -42,6 +45,9 @@ public class UtNetworking {
     @Serializable
     public static class PositionMessage extends AbstractMessage {
         private Vector3f position;
+        public PositionMessage() {
+            
+        }
         public PositionMessage(Vector3f pos) {
             position = pos;
         }
@@ -51,7 +57,7 @@ public class UtNetworking {
     }
     
     @Serializable
-    public class NetworkMessage extends AbstractMessage {
+    public static class NetworkMessage extends AbstractMessage {
         private String message;
         
         public NetworkMessage() {

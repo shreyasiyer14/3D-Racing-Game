@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package mygame;
+import com.jme3.app.SimpleApplication;
 import vehicles.*;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -11,6 +12,7 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.InputManager;
+import network.UtNetworking.PosAndRotMessage;
 
 
 /**
@@ -27,12 +29,14 @@ public class VehicleControls implements ActionListener {
     private float jumpPower;
     int BreakPower;
     InputManager inputManager;
+    Main sapp;
     public VehicleControls(String name ,Vehicle vehicle, float accelerationPower, 
-             InputManager inputManager ){
+             InputManager inputManager, Main app){
         this.vehicle= vehicle;
         this.accelerationPower= accelerationPower;
         this.inputManager= inputManager;
         this.vehicleName= name;
+        sapp = app;
     }
     
     
@@ -60,6 +64,7 @@ public class VehicleControls implements ActionListener {
             } else {
                 steeringValue += -.5f;
             }
+            
             vehicle.getController().steer(steeringValue);
         } 
         if (binding.equals("Rights")) {
@@ -109,5 +114,6 @@ public class VehicleControls implements ActionListener {
             
             }
         }
+        sapp.myClient.send(new PosAndRotMessage(vehicle.getCarNode().getLocalTranslation(), vehicle.getCarNode().getLocalRotation().mult(Vector3f.UNIT_XYZ)));
     }
 }

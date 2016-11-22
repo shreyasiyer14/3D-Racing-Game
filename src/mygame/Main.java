@@ -33,7 +33,7 @@ public class Main extends SimpleApplication {
     private Vehicle ferrari;
     LapManager lapManager;
     
-    Client myClient;
+    public Client myClient;
     ConcurrentLinkedQueue<String> messageQueue;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
@@ -45,7 +45,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            myClient = Network.connectToServer("localhost", 6143);
+            myClient = Network.connectToServer("localhost", UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,7 +65,7 @@ public class Main extends SimpleApplication {
         lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
-        VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
+        VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager, this);
         Control.setupKeys();
         bot = new AICar(0.5f, 2f, 1000f, assetManager);
         try {
@@ -111,6 +111,7 @@ public class Main extends SimpleApplication {
     
     @Override
     public void destroy() {
+       // myClient.
         myClient.close();
         super.destroy();
     }
@@ -129,11 +130,8 @@ public class Main extends SimpleApplication {
                         ferrari.getCarNode().setLocalTranslation(posMsg.getPosition());
                         return null;
                     }
-                });
-            }
-                
+                });            
             }
         }
-        
     }
 }
