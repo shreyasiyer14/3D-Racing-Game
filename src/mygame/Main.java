@@ -35,7 +35,7 @@ public class Main extends SimpleApplication {
     private AICar bot;
     private Vehicle ferrari;
     
-    private Node opponent;
+    private Opponent opponent;
     RigidBodyControl rbc;
     
     LapManager lapManager;
@@ -62,6 +62,7 @@ public class Main extends SimpleApplication {
         }
         messageQueue = new ConcurrentLinkedQueue<String>();
         myClient.addMessageListener(new NetworkMessageListener());
+        
         physicsEngine = new BulletAppState();
         stateManager.attach(physicsEngine);
          if (settings.getRenderer().startsWith("LWJGL")) {
@@ -69,28 +70,24 @@ public class Main extends SimpleApplication {
             bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
             viewPort.addProcessor(bsr);
         }
+         
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
         
         inputManager.setCursorVisible(true);
         
+        getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
+
         lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
+        
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
-        ferrari.initVehicle();
-        
-        opponent = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
-        opponent.setLocalTranslation(new Vector3f(0.38055262f, 14.283572f, -25.188498f));
-        Geometry chasis = Vehicle.getGeometryOfNode(opponent, "Car");
-        BoundingBox box = (BoundingBox) chasis.getModelBound();
-        CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
-        rbc = new RigidBodyControl(1000f);
-        opponent.addControl(rbc);
-        rbc.setKinematic(true);
-        rbc.setKinematicSpatial(true);
-        getPhysicsSpace().add(opponent);
-        
+        ferrari.initVehicle();      
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager, this);
-        Control.setupKeys();
+        Control.setupKeys(); 
+        
+        opponent = new Opponent(new Vector3f(-19f, 18,-2f), 1000f, assetManager);
+        opponent.initOpponent();
+
         bot = new AICar(0.5f, 2f, 1000f, assetManager);
         try {
             bot.initAICar();
@@ -105,7 +102,6 @@ public class Main extends SimpleApplication {
         vcam.initCamera();
         ferrari.getCarNode().attachChild(vcam.getCamera());
         
-        getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
         
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
@@ -114,7 +110,7 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(ferrari.getCarNode());
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
-        rootNode.attachChild(opponent);
+        rootNode.attachChild(opponent.getCarNode());
     }
     
     @Override
@@ -125,13 +121,10 @@ public class Main extends SimpleApplication {
         } else {
             fpsText.setText("No Message");
         }
-        
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
         myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
-
-        //System.out.println(ferrari.getCarNode().getLocalTranslation().x + " " + ferrari.getCarNode().getLocalTranslation().y + " " + ferrari.getCarNode().getLocalTranslation().z);
         bot.AIUpdate();
     }
     
@@ -153,9 +146,9 @@ public class Main extends SimpleApplication {
                 Main.this.enqueue(new Callable() {
                     @Override
                     public Object call() throws Exception {
-                        opponent.setLocalTranslation(posMsg.getPosition());                 
-                        opponent.setLocalRotation(posMsg.getRotation());
-                        rbc.setPhysicsLocation(opponent.getLocalTranslation());
+                        opponent.getCarNode().setLocalTranslation(posMsg.getPosition());                 
+                        opponent.getCarNode().setLocalRotation(posMsg.getRotation());
+                        opponent.getController().setPhysicsLocation(opponent.getCarNode().getLocalTranslation());
                         return null;
                     }
                 });            
