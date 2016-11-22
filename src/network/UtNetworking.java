@@ -5,6 +5,7 @@
  */
 package network;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
@@ -26,18 +27,18 @@ public class UtNetworking {
     @Serializable
     public static class PosAndRotMessage extends AbstractMessage {
         private Vector3f position;
-        private Vector3f rotation;
+        private Quaternion rotation;
         public PosAndRotMessage() {
             
         }
-        public PosAndRotMessage(Vector3f pos, Vector3f rot) {
+        public PosAndRotMessage(Vector3f pos, Quaternion rot) {
             position = pos;
             rotation = rot;
         }
         public Vector3f getPosition() {
             return position;
         }
-        public Vector3f getRotation() {
+        public Quaternion getRotation() {
             return rotation;
         }
     }

@@ -1,22 +1,24 @@
 package mygame;
 import ai.AICar;
-import mygame.VehicleCamera;
 import vehicles.*;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.StatsAppState;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.light.DirectionalLight;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.scene.CameraNode;
-import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.shadow.BasicShadowRenderer;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
-import com.jme3.font.BitmapText;
-import com.jme3.input.event.KeyInputEvent;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -25,12 +27,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import network.UtNetworking;
 import network.UtNetworking.NetworkMessage;
+import network.UtNetworking.PosAndRotMessage;
 import network.UtNetworking.PositionMessage;
 import terrain.*;
 public class Main extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
     private Vehicle ferrari;
+    private Node opponent;
     LapManager lapManager;
     
     public Client myClient;
@@ -41,6 +45,9 @@ public class Main extends SimpleApplication {
         app.start(JmeContext.Type.Display);
     }
 
+    public Main() {
+        super(new StatsAppState());
+    }
     @Override
     public void simpleInitApp() {
 
@@ -62,9 +69,23 @@ public class Main extends SimpleApplication {
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
 
+        
+        inputManager.setCursorVisible(true);
+        
         lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
         ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();
+        
+        opponent = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
+        opponent.setLocalTranslation(new Vector3f(0.38055262f, 14.283572f, -25.188498f));
+        Geometry chasis = Vehicle.getGeometryOfNode(opponent, "Car");
+        BoundingBox box = (BoundingBox) chasis.getModelBound();
+        CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
+        RigidBodyControl rbc = new RigidBodyControl(1000f);
+        opponent.addControl(rbc);
+        rbc.setKinematic(true);
+        rbc.setKinematicSpatial(true);
+        
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager, this);
         Control.setupKeys();
         bot = new AICar(0.5f, 2f, 1000f, assetManager);
@@ -90,6 +111,9 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(ferrari.getCarNode());
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
+        rootNode.attachChild(opponent);
+        
+        
     }
     
     @Override
@@ -104,7 +128,8 @@ public class Main extends SimpleApplication {
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
-        
+        myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
+
         //System.out.println(ferrari.getCarNode().getLocalTranslation().x + " " + ferrari.getCarNode().getLocalTranslation().y + " " + ferrari.getCarNode().getLocalTranslation().z);
         bot.AIUpdate();
     }
@@ -122,12 +147,13 @@ public class Main extends SimpleApplication {
             if (m instanceof NetworkMessage) {
                 NetworkMessage message = (NetworkMessage) m;
                 messageQueue.add(message.getMessage());
-            } else if (m instanceof PositionMessage) {
-                final PositionMessage posMsg = (PositionMessage) m;
+            } else if (m instanceof PosAndRotMessage) {
+                final PosAndRotMessage posMsg = (PosAndRotMessage) m;
                 Main.this.enqueue(new Callable() {
                     @Override
                     public Object call() throws Exception {
-                        ferrari.getCarNode().setLocalTranslation(posMsg.getPosition());
+                        opponent.setLocalTranslation(posMsg.getPosition());
+                        opponent.setLocalRotation(posMsg.getRotation());
                         return null;
                     }
                 });            

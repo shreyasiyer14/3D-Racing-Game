@@ -5,7 +5,9 @@
  */
 package network;
 import com.jme3.app.SimpleApplication;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -13,14 +15,10 @@ import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
-import static java.lang.Math.random;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import network.UtNetworking.NetworkMessage;
 import network.UtNetworking.PosAndRotMessage;
-import network.UtNetworking.PositionMessage;
 
 /**
  *
@@ -37,10 +35,10 @@ public class ServerMain extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-
         try {
             myServer = Network.createServer(UtNetworking.PORT);
             myServer.start();
+            myServer.addMessageListener(new MessageHandler());
         } catch (IOException ex) {
             Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,24 +52,30 @@ public class ServerMain extends SimpleApplication {
             //myServer.broadcast(new PositionMessage(new Vector3f(f,f,f)));
             counter = 0;
         }
+        //System.out.println(myServer.getConnections().size());
     }
     
     private class MessageHandler implements MessageListener<HostedConnection> {
        public void messageReceived(HostedConnection source, Message m) {
-           int otherClientIndex = 0;
-           Collection<HostedConnection> col = myServer.getConnections();
-           for (int i = 0; i < col.size(); i++) {
-               if (col.toArray()[i] != source) {
-                   otherClientIndex = i;
-                   break;
-               }
-           }
-           if (m instanceof PosAndRotMessage) {
-               PosAndRotMessage msg = (PosAndRotMessage) m;
-               Vector3f pos = msg.getPosition();
-               Vector3f rot = msg.getRotation();
-               myServer.getConnection(otherClientIndex).send(new PosAndRotMessage(pos,rot));
-
+           if (myServer.getConnections().size() >= 2) {
+                int otherClientIndex = 0;
+                Collection<HostedConnection> col = myServer.getConnections();
+                for (int i = 0; i < col.size(); i++) {
+                    if (col.toArray()[i] != source) {
+                        otherClientIndex = i;
+                        break;
+                    }
+                }
+                System.out.println((2 - otherClientIndex - 1) + " " + otherClientIndex);
+                if (m instanceof PosAndRotMessage) {
+                     PosAndRotMessage msg = (PosAndRotMessage) m;
+                    Vector3f pos = msg.getPosition();
+                    Quaternion rot = msg.getRotation();
+               
+                //    myServer.getConnection(otherClientIndex).send(new PosAndRotMessage(pos,rot));
+                
+                    myServer.broadcast(Filters.in(col.toArray()[otherClientIndex]), new PosAndRotMessage(pos,rot));
+                }
            }
        } 
     }

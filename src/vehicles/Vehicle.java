@@ -48,7 +48,7 @@ abstract public class Vehicle {
     abstract public Node getCarNode ();
     abstract public BoundingBox getBoxCollider();
     abstract public VehicleControl getController();
-    public Geometry getGeometryOfNode(Spatial spatial, String name) {
+    public static Geometry getGeometryOfNode(Spatial spatial, String name) {
         if (spatial instanceof Node) {
             Node node = (Node) spatial;
             for (int i = 0; i < node.getQuantity(); i++) {

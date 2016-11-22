@@ -114,6 +114,5 @@ public class VehicleControls implements ActionListener {
             
             }
         }
-        sapp.myClient.send(new PosAndRotMessage(vehicle.getCarNode().getLocalTranslation(), vehicle.getCarNode().getLocalRotation().mult(Vector3f.UNIT_XYZ)));
     }
 }
