@@ -14,6 +14,7 @@ import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
+import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -41,6 +42,11 @@ public class ClientMain extends SimpleApplication {
         UtNetworking.initialiseSerializables();
         ClientMain app = new ClientMain();
         app.start(JmeContext.Type.Display);
+        AppSettings settings = new AppSettings(true);
+        settings.setFrameRate(300);
+        settings.setResolution(1024, 768);
+        app.setDisplayFps(false);
+        app.setDisplayStatView(false);
     }
 
     public ClientMain() {
@@ -48,6 +54,7 @@ public class ClientMain extends SimpleApplication {
     }
     @Override
     public void simpleInitApp() {
+
         try {
             myClient = Network.connectToServer("localhost", UtNetworking.PORT);
             myClient.start();
@@ -82,7 +89,7 @@ public class ClientMain extends SimpleApplication {
         opponent = new Opponent(new Vector3f(0f,-100f,0f), 1000f, assetManager);
         opponent.initOpponent();
         
-        bot = new AICar(0.5f, 2f, 1000f, assetManager);
+        bot = new AICar(0.5f, 4f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
-    <useControls filename="nifty-default-controls.xml"/>
-    <useStyles filename="nifty-default-styles.xml"/>
     <screen id="GScreen0" controller="mygame.Main">
         <layer id="GLayer0" childLayout="absolute">
-            <control name="button" id="GButton0" childLayout="center" width="225px" x="86" y="187" label="Single Player!" height="51px">
-                <interact onClick="startSinglePlayer()"/>
-            </control>
-
-            <control name="button" id="GButton1" childLayout="center" width="225" x="85" y="281" label="Multi Player!" height="51"/>
+            <control name="button" id="GButton1" childLayout="center" x="85" width="225" y="281" label="Multi Player!" align="" height="51"/>
+            <control name="button" id="GButton0" childLayout="center" x="86" width="225px" y="187" label="Single Player!" height="51px"/>
         </layer>
+    </screen>
+    <screen id="GScreen1">
+        <layer id="GLayer2" childLayout="absolute"/>
     </screen>
 </nifty>
