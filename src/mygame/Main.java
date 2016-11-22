@@ -55,7 +55,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            myClient = Network.connectToServer("localhost", UtNetworking.PORT);
+            myClient = Network.connectToServer("172.16.84.255", UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,8 +114,6 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
         rootNode.attachChild(opponent);
-        
-        
     }
     
     @Override

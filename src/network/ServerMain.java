@@ -49,10 +49,8 @@ public class ServerMain extends SimpleApplication {
         counter += tpf;
         if (counter > 0.3f) {
             float f = counter * 5;
-            //myServer.broadcast(new PositionMessage(new Vector3f(f,f,f)));
             counter = 0;
         }
-        //System.out.println(myServer.getConnections().size());
     }
     
     private class MessageHandler implements MessageListener<HostedConnection> {
