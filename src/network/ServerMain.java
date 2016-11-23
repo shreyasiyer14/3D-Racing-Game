@@ -19,14 +19,16 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import network.UtNetworking.PosAndRotMessage;
-
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 /**
  *
  * @author EOF-1
  */
 public class ServerMain extends SimpleApplication {
     Server myServer;
-    float counter = 0;
+    
+    public static String serverIP;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
         ServerMain app = new ServerMain();
@@ -42,15 +44,18 @@ public class ServerMain extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+        try {
+            InetAddress ipAddr = InetAddress.getLocalHost();
+            serverIP = ipAddr.getHostAddress();
+            System.out.println("Server running on port: " + UtNetworking.PORT + " IP: " + serverIP);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-        counter += tpf;
-        if (counter > 0.3f) {
-            float f = counter * 5;
-            counter = 0;
-        }
+        
     }
     
     private class MessageHandler implements MessageListener<HostedConnection> {

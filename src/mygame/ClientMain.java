@@ -17,10 +17,14 @@ import com.jme3.network.Network;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import network.RoundRobinSpawn;
+import network.ServerMain;
 import network.UtNetworking;
 import network.UtNetworking.NetworkMessage;
 import network.UtNetworking.PosAndRotMessage;
@@ -29,6 +33,8 @@ public class ClientMain extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
     private Vehicle ferrari;
+    private Vector3f userTransform;
+    private String serverIP;
     
     private Opponent opponent;
     RigidBodyControl rbc;
@@ -36,11 +42,12 @@ public class ClientMain extends SimpleApplication {
     LapManager lapManager;
     
     public Client myClient;
+    private static ClientMain app;
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
-        ClientMain app = new ClientMain();
+        app = new ClientMain();
         app.start(JmeContext.Type.Display);
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(300);
@@ -56,13 +63,29 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            myClient = Network.connectToServer("localhost", UtNetworking.PORT);
+            serverIP = "172.16.81.115";
+            myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
             Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         messageQueue = new ConcurrentLinkedQueue<String>();
         myClient.addMessageListener(new NetworkMessageListener());
+        
+        RoundRobinSpawn rrs = new RoundRobinSpawn();
+        InetAddress ipAddr;
+        try {
+            ipAddr = InetAddress.getLocalHost();
+            if (ipAddr.getHostAddress().equals(serverIP)) {
+                userTransform = rrs.spawnPoints[0];
+            }
+            else {
+                userTransform = rrs.spawnPoints[1];
+            }
+
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         physicsEngine = new BulletAppState();
         stateManager.attach(physicsEngine);
@@ -71,17 +94,15 @@ public class ClientMain extends SimpleApplication {
             bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
             viewPort.addProcessor(bsr);
         }
-         
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
-        
         inputManager.setCursorVisible(true);
         
         getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
 
         lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
         
-        ferrari = new Ferrari (0.3f, new Vector3f(-19f, 18,-2f), 20f, 1000f,assetManager, ColorRGBA.Red);
+        ferrari = new Ferrari (0.3f, userTransform , 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();      
         VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
         Control.setupKeys(); 
@@ -148,5 +169,11 @@ public class ClientMain extends SimpleApplication {
                 });            
             }
         }
+    }
+    
+    @Override
+    public void destroy() {
+        myClient.close();
+        super.destroy();
     }
 }

@@ -20,6 +20,7 @@ import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.asset.*;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 
 /**
  *
@@ -50,6 +51,7 @@ public class Ferrari extends Vehicle{
         carMass = mass;
         this.assetManager= assetManager;
         Car = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
+
         matColor = color;
     }
     @Override
@@ -116,7 +118,10 @@ public class Ferrari extends Vehicle{
         player.getWheel(3).setFrictionSlip(2);
         player.getWheel(0).setFrictionSlip(2);
         player.getWheel(2).setFrictionSlip(2);
+        Car.setLocalRotation(new Quaternion(0f,-0.39f, 0f, 1f));
+
         Car.addControl(player);
+
         //ferrariCar.scale(carScale);
         collider = box;
         getPhysicsSpace().add(Car);
