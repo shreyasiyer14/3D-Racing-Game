@@ -8,6 +8,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.shadow.BasicShadowRenderer;
 import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
@@ -43,6 +44,8 @@ public class ClientMain extends SimpleApplication {
     
     public Client myClient;
     private static ClientMain app;
+    
+    private boolean hasWon = false;
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
@@ -63,7 +66,7 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            serverIP = "172.16.81.115";
+            serverIP = "172.16.86.13";
             myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
@@ -146,6 +149,10 @@ public class ClientMain extends SimpleApplication {
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
+        if (lapManager.matchCompleted()) {
+            myClient.send(new NetworkMessage("Completed"));
+            lapManager.matchCompleted = false;
+        }
         myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
         bot.AIUpdate();
     }
@@ -155,7 +162,12 @@ public class ClientMain extends SimpleApplication {
         public void messageReceived(Client source, Message m) {
             if (m instanceof NetworkMessage) {
                 NetworkMessage message = (NetworkMessage) m;
-                messageQueue.add(message.getMessage());
+                if ("Won".equals(message.getMessage())) {
+                    System.out.println("Congratulations! You have Won!");     
+                }
+                else if ("Lost".equals(message.getMessage())) {
+                    System.out.println("Damn! So close!");
+                }
             } else if (m instanceof PosAndRotMessage) {
                 final PosAndRotMessage posMsg = (PosAndRotMessage) m;
                 ClientMain.this.enqueue(new Callable() {

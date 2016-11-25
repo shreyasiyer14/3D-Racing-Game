@@ -20,6 +20,7 @@ public class LapManager {
     private final Vector3f startPoint;
     private int lapCount;
     private boolean justCompleted = false;
+    public boolean matchCompleted = false;
     public LapManager(Vector3f transform, int laps) {
         startPoint = transform;
         lapCount = laps;
@@ -34,10 +35,10 @@ public class LapManager {
         helloText.setColor(ColorRGBA.Red);
         helloText.setLocalTranslation(100, helloText.getLineHeight() + 300, 0);
         guiNode.attachChild(helloText);
-
+        
         if (vehicleTransform.distance(startPoint) <= 7.0f) {
             if (lapCount == 0)
-                System.out.println("DONE");
+                matchCompleted = true;
             else {
                 if (!justCompleted) {
                     lapCount -= 1;
@@ -51,5 +52,9 @@ public class LapManager {
     }
     public int getLapCount() {
         return lapCount;
+    }
+
+    public boolean matchCompleted() {
+        return matchCompleted;
     }
 }

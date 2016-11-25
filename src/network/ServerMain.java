@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import network.UtNetworking.PosAndRotMessage;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import network.UtNetworking.NetworkMessage;
 /**
  *
  * @author EOF-1
@@ -67,6 +68,13 @@ public class ServerMain extends SimpleApplication {
                     if (col.toArray()[i] != source) {
                         otherClientIndex = i;
                         break;
+                    }
+                }
+                if (m instanceof NetworkMessage) {
+                    NetworkMessage msg = (NetworkMessage) m;
+                    if ("Completed".equals(msg.getMessage())) {
+                        myServer.broadcast(Filters.equalTo(source), new NetworkMessage("Won"));
+                        myServer.broadcast(Filters.notEqualTo(source), new NetworkMessage("Lost"));
                     }
                 }
                 if (m instanceof PosAndRotMessage) {
