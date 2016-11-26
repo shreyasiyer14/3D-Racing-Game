@@ -59,12 +59,8 @@ public class ServerMain extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         numOfClients = myServer.getConnections().size();
-        if (myServer.getConnections().size() >= 2 && !matchReady) {
-            myServer.broadcast(new NetworkMessage("StartMatch"));
-            //matchReady = true;
-        }
     }
-    
+
     private class MessageHandler implements MessageListener<HostedConnection> {
        public void messageReceived(HostedConnection source, Message m) {
            if (myServer.getConnections().size() >= 2) {
@@ -81,6 +77,9 @@ public class ServerMain extends SimpleApplication {
                     if ("Completed".equals(msg.getMessage())) {
                         myServer.broadcast(Filters.equalTo(source), new NetworkMessage("Won"));
                         myServer.broadcast(Filters.notEqualTo(source), new NetworkMessage("Lost"));
+                    }
+                    if ("Connected".equals(msg.getMessage())) {
+                        myServer.broadcast(Filters.notEqualTo(source), new NetworkMessage("OpponentConnected"));
                     }
                 }
                 if (m instanceof PosAndRotMessage) {

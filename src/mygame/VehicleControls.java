@@ -103,8 +103,8 @@ public class VehicleControls implements ActionListener {
         if (binding.equals("Reset")) {
             if (value) {
                 System.out.println("Reset");
-                vehicle.getController().setPhysicsLocation(new Vector3f(-19f, 18,-2f));
-                vehicle.getController().setPhysicsRotation(new Matrix3f());
+                vehicle.getController().setPhysicsLocation(new Vector3f(-20f, 18f,-2f));
+                //vehicle.getController().setPhysicsRotation(new Matrix3f());
                 vehicle.getController().setLinearVelocity(Vector3f.ZERO);
                 vehicle.getController().setAngularVelocity(Vector3f.ZERO);
                 vehicle.getController().resetSuspension();

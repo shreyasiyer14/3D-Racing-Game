@@ -39,7 +39,9 @@ public class ClientMain extends SimpleApplication {
     private BulletAppState physicsEngine;
     private AICar bot;
     private Vehicle ferrari;
+    private VehicleControls Control;
     private Vector3f userTransform;
+    private Vector3f opponentTransform;
     private String serverIP;
     
     private Opponent opponent;
@@ -51,16 +53,18 @@ public class ClientMain extends SimpleApplication {
     private static ClientMain app;
     
     private boolean hasWon = false;
+    private boolean isConnected = false;
     private boolean startMatch = false;
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
-        app = new ClientMain();
-        app.start(JmeContext.Type.Display);
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(300);
         settings.setResolution(1024, 768);
+        app = new ClientMain();
+        app.start(JmeContext.Type.Display);
+
         app.setDisplayFps(false);
         app.setDisplayStatView(false);
     }
@@ -86,9 +90,11 @@ public class ClientMain extends SimpleApplication {
             ipAddr = InetAddress.getLocalHost();
             if (ipAddr.getHostAddress().equals(ServerMain.serverIP) || ServerMain.numOfClients == 1) {
                 userTransform = rrs.spawnPoints[0];
+                opponentTransform = rrs.spawnPoints[1];
             }
             else {
                 userTransform = rrs.spawnPoints[1];
+                opponentTransform = rrs.spawnPoints[0];
             }
 
         } catch (UnknownHostException ex) {
@@ -112,7 +118,7 @@ public class ClientMain extends SimpleApplication {
         
         ferrari = new Ferrari (0.3f, userTransform , 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();      
-        VehicleControls Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
+        Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
         Control.setupKeys(); 
         
         opponent = new Opponent(new Vector3f(0f,-100f,0f), 1000f, assetManager);
@@ -140,12 +146,10 @@ public class ClientMain extends SimpleApplication {
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
         rootNode.attachChild(opponent.getCarNode());
-    }
-    
+    }  
  
     @Override
     public void simpleUpdate(float tpf) {
-        
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
@@ -153,7 +157,10 @@ public class ClientMain extends SimpleApplication {
             myClient.send(new NetworkMessage("Completed"));
             lapManager.matchCompleted = false;
         }
-        myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
+        if (myClient.isConnected()) {
+            myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
+            myClient.send(new NetworkMessage("Connected"));
+        }
         if (startMatch) {
             if (rootNode.hasChild(bot.getCarNode())) {
                 rootNode.detachChild(bot.getCarNode());
@@ -177,12 +184,13 @@ public class ClientMain extends SimpleApplication {
                 }
                 else if ("Lost".equals(message.getMessage())) {
                     System.out.println("Damn! So close!");
-                }
-                
-                if ("StartMatch".equals(message.getMessage())) {
+                }   
+                if ("OpponentConnected".equals(message.getMessage()) && !isConnected) {
+                    isConnected = true;
                     startMatch = true;
                 }
-            } else if (m instanceof PosAndRotMessage) {
+            } 
+            if (m instanceof PosAndRotMessage && startMatch) {
                 final PosAndRotMessage posMsg = (PosAndRotMessage) m;
                 ClientMain.this.enqueue(new Callable() {
                     @Override
@@ -205,6 +213,9 @@ public class ClientMain extends SimpleApplication {
     
     public void startMatch() throws InterruptedException {
         ferrari.getCarNode().setLocalTranslation(userTransform);
-        //Thread.sleep(5000);
+        ferrari.getController().setPhysicsLocation(userTransform);
+        ferrari.getController().setLinearVelocity(Vector3f.ZERO);
+        ferrari.getController().setAngularVelocity(Vector3f.ZERO);
+        ferrari.getController().resetSuspension();
     }
 }
