@@ -30,10 +30,18 @@ public class ServerMain extends SimpleApplication {
     Server myServer;
     
     public static String serverIP;
+    private boolean matchReady = false;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
         ServerMain app = new ServerMain();
         app.start(JmeContext.Type.Headless);
+        try {
+            InetAddress ipAddr = InetAddress.getLocalHost();
+            serverIP = ipAddr.getHostAddress();
+            System.out.println("Server running on port: " + UtNetworking.PORT + " IP: " + serverIP);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -45,18 +53,14 @@ public class ServerMain extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            InetAddress ipAddr = InetAddress.getLocalHost();
-            serverIP = ipAddr.getHostAddress();
-            System.out.println("Server running on port: " + UtNetworking.PORT + " IP: " + serverIP);
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-        }
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-        
+        if (myServer.getConnections().size() >= 2 && !matchReady) {
+            myServer.broadcast(new NetworkMessage("StartMatch"));
+            matchReady = true;
+        }
     }
     
     private class MessageHandler implements MessageListener<HostedConnection> {

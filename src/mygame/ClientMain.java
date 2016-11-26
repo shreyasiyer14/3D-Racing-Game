@@ -46,6 +46,7 @@ public class ClientMain extends SimpleApplication {
     private static ClientMain app;
     
     private boolean hasWon = false;
+    private boolean startMatch = false;
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
@@ -66,8 +67,7 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            serverIP = "172.16.86.13";
-            myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
+            myClient = Network.connectToServer("localhost", UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
             Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,7 +79,7 @@ public class ClientMain extends SimpleApplication {
         InetAddress ipAddr;
         try {
             ipAddr = InetAddress.getLocalHost();
-            if (ipAddr.getHostAddress().equals(serverIP)) {
+            if (ipAddr.getHostAddress().equals(ServerMain.serverIP)) {
                 userTransform = rrs.spawnPoints[0];
             }
             else {
@@ -140,12 +140,7 @@ public class ClientMain extends SimpleApplication {
  
     @Override
     public void simpleUpdate(float tpf) {
-        String message = messageQueue.poll();
-        if (message!=null) {
-            fpsText.setText(message);
-        } else {
-            fpsText.setText("No Message");
-        }
+        
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
@@ -154,10 +149,14 @@ public class ClientMain extends SimpleApplication {
             lapManager.matchCompleted = false;
         }
         myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
-        bot.AIUpdate();
+        if (startMatch) {
+            if (rootNode.hasChild(bot.getCarNode()))
+                rootNode.detachChild(bot.getCarNode());
+        }
+        else
+            bot.AIUpdate();
     }
     private class NetworkMessageListener implements MessageListener<Client> {
-
         @Override
         public void messageReceived(Client source, Message m) {
             if (m instanceof NetworkMessage) {
@@ -167,6 +166,10 @@ public class ClientMain extends SimpleApplication {
                 }
                 else if ("Lost".equals(message.getMessage())) {
                     System.out.println("Damn! So close!");
+                }
+                
+                if ("StartMatch".equals(message.getMessage())) {
+                    startMatch = true;
                 }
             } else if (m instanceof PosAndRotMessage) {
                 final PosAndRotMessage posMsg = (PosAndRotMessage) m;
@@ -187,5 +190,9 @@ public class ClientMain extends SimpleApplication {
     public void destroy() {
         myClient.close();
         super.destroy();
+    }
+    
+    public void startMatch() {
+        
     }
 }
