@@ -88,7 +88,7 @@ public class ClientMain extends SimpleApplication {
         InetAddress ipAddr;
         try {
             ipAddr = InetAddress.getLocalHost();
-            if (ipAddr.getHostAddress().equals(ServerMain.serverIP) || ServerMain.numOfClients == 1) {
+            if (ipAddr.getHostAddress().equals(ServerMain.serverIP)) {
                 userTransform = rrs.spawnPoints[0];
                 opponentTransform = rrs.spawnPoints[1];
             }
@@ -157,8 +157,8 @@ public class ClientMain extends SimpleApplication {
             myClient.send(new NetworkMessage("Completed"));
             lapManager.matchCompleted = false;
         }
+        myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
         if (myClient.isConnected()) {
-            myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
             myClient.send(new NetworkMessage("Connected"));
         }
         if (startMatch) {
@@ -190,7 +190,7 @@ public class ClientMain extends SimpleApplication {
                     startMatch = true;
                 }
             } 
-            if (m instanceof PosAndRotMessage && startMatch) {
+            if (m instanceof PosAndRotMessage) {
                 final PosAndRotMessage posMsg = (PosAndRotMessage) m;
                 ClientMain.this.enqueue(new Callable() {
                     @Override
@@ -214,8 +214,10 @@ public class ClientMain extends SimpleApplication {
     public void startMatch() throws InterruptedException {
         ferrari.getCarNode().setLocalTranslation(userTransform);
         ferrari.getController().setPhysicsLocation(userTransform);
+        
         ferrari.getController().setLinearVelocity(Vector3f.ZERO);
         ferrari.getController().setAngularVelocity(Vector3f.ZERO);
         ferrari.getController().resetSuspension();
+        lapManager.resetLaps();
     }
 }

@@ -56,5 +56,10 @@ public class LapManager {
 
     public boolean matchCompleted() {
         return matchCompleted;
+    
+    }
+    
+    public void resetLaps() {
+        lapCount = 3;
     }
 }

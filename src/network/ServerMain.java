@@ -72,6 +72,13 @@ public class ServerMain extends SimpleApplication {
                         break;
                     }
                 }
+                if (m instanceof PosAndRotMessage) {
+                    PosAndRotMessage msg = (PosAndRotMessage) m;
+                    Vector3f pos = msg.getPosition();
+                    Quaternion rot = msg.getRotation();
+                             
+                    myServer.broadcast(Filters.in(col.toArray()[otherClientIndex]), new PosAndRotMessage(pos,rot));
+                }
                 if (m instanceof NetworkMessage) {
                     NetworkMessage msg = (NetworkMessage) m;
                     if ("Completed".equals(msg.getMessage())) {
@@ -82,13 +89,7 @@ public class ServerMain extends SimpleApplication {
                         myServer.broadcast(Filters.notEqualTo(source), new NetworkMessage("OpponentConnected"));
                     }
                 }
-                if (m instanceof PosAndRotMessage) {
-                    PosAndRotMessage msg = (PosAndRotMessage) m;
-                    Vector3f pos = msg.getPosition();
-                    Quaternion rot = msg.getRotation();
-                             
-                    myServer.broadcast(Filters.in(col.toArray()[otherClientIndex]), new PosAndRotMessage(pos,rot));
-                }
+ 
            }
        } 
     }
