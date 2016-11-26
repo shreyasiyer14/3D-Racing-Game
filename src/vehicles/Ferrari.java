@@ -71,7 +71,6 @@ public class Ferrari extends Vehicle{
         //chasis.setMaterial(mat);
         //Create a hull collision shape for the chassis
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
-
         //Create a vehicle control
         player = new VehicleControl(carHull, carMass);
 

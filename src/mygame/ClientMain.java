@@ -15,6 +15,7 @@ import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
@@ -76,7 +77,8 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            myClient = Network.connectToServer("localhost", UtNetworking.PORT);
+            serverIP = "172.16.83.56";
+            myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
             Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,7 +90,7 @@ public class ClientMain extends SimpleApplication {
         InetAddress ipAddr;
         try {
             ipAddr = InetAddress.getLocalHost();
-            if (ipAddr.getHostAddress().equals(ServerMain.serverIP)) {
+            if (ipAddr.getHostAddress().equals(serverIP)) {
                 userTransform = rrs.spawnPoints[0];
                 opponentTransform = rrs.spawnPoints[1];
             }
@@ -190,7 +192,7 @@ public class ClientMain extends SimpleApplication {
                     startMatch = true;
                 }
             } 
-            if (m instanceof PosAndRotMessage) {
+            if (m instanceof PosAndRotMessage && startMatch) {
                 final PosAndRotMessage posMsg = (PosAndRotMessage) m;
                 ClientMain.this.enqueue(new Callable() {
                     @Override
@@ -214,7 +216,7 @@ public class ClientMain extends SimpleApplication {
     public void startMatch() throws InterruptedException {
         ferrari.getCarNode().setLocalTranslation(userTransform);
         ferrari.getController().setPhysicsLocation(userTransform);
-        
+        ferrari.getCarNode().setLocalRotation(new Quaternion(0f, -0.4f, 0f, 1.0f));
         ferrari.getController().setLinearVelocity(Vector3f.ZERO);
         ferrari.getController().setAngularVelocity(Vector3f.ZERO);
         ferrari.getController().resetSuspension();
