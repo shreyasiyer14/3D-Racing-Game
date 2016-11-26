@@ -89,7 +89,7 @@ public class AICar {
     
     public void initTracingCoordinates() throws IOException {
         assetManager.registerLoader(TextLoader.class, "txt");
-        String file = (String) assetManager.loadAsset("Models/AIPathCoordinates.txt");
+        String file = (String) assetManager.loadAsset("Models/AIPathCoordinates copy.txt");
         String[] currentLine = file.split(" ");
         for (String currentLine1 : currentLine) {
             pathTraceCoords.addElement(Float.parseFloat(currentLine1));

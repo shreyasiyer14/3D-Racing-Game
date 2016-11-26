@@ -77,7 +77,7 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            serverIP = "172.16.83.56";
+            serverIP = "172.16.81.21";
             myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {

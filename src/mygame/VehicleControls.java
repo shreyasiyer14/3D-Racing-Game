@@ -98,7 +98,9 @@ public class VehicleControls implements ActionListener {
                 vehicle.getController().brake(0f);
             }
         } 
-        if (binding.equals("Space")) {        
+        if (binding.equals("Space")) {       
+            if (value)
+                System.out.println(vehicle.getCarNode().getLocalTranslation());
         }
         if (binding.equals("Reset")) {
             if (value) {
