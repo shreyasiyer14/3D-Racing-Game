@@ -221,5 +221,6 @@ public class ClientMain extends SimpleApplication {
         ferrari.getController().setAngularVelocity(Vector3f.ZERO);
         ferrari.getController().resetSuspension();
         lapManager.resetLaps();
+        Thread.sleep(5000);
     }
 }
