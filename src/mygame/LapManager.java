@@ -1,6 +1,6 @@
 /*
  * Created by Shreyas Iyer, IMT2015018
- * Module: Ferrari car description
+ * Module: Information about the Laps is stored here.
  * Created on: 8/11/2016
  */
 package mygame;

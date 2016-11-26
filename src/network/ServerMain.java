@@ -1,6 +1,6 @@
 /*
  * Created by Shreyas Iyer, IMT2015018
- * Module: Ferrari car description
+ * Module: Server side application
  * Created on: 8/11/2016
  */
 package network;
@@ -31,6 +31,7 @@ public class ServerMain extends SimpleApplication {
     
     public static String serverIP;
     private boolean matchReady = false;
+    public static int numOfClients;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
         ServerMain app = new ServerMain();
@@ -57,9 +58,10 @@ public class ServerMain extends SimpleApplication {
     
     @Override
     public void simpleUpdate(float tpf) {
+        numOfClients = myServer.getConnections().size();
         if (myServer.getConnections().size() >= 2 && !matchReady) {
             myServer.broadcast(new NetworkMessage("StartMatch"));
-            matchReady = true;
+            //matchReady = true;
         }
     }
     

@@ -1,6 +1,6 @@
 /*
  * Created by Shreyas Iyer, IMT2015018
- * Module: Ferrari car description
+ * Module: Messages type storage class
  * Created on: 8/11/2016
  */
 package network;

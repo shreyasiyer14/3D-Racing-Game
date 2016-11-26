@@ -1,6 +1,6 @@
 /*
  * Created by Shreyas Iyer, IMT2015018
- * Module: Ferrari car description
+ * Module: The clients spawn transform bearing class.
  * Created on: 8/11/2016
  */
 package network;

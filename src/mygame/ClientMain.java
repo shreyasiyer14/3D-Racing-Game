@@ -1,3 +1,8 @@
+/*
+ * Created by Shreyas Iyer, IMT2015018
+ * Module: Client side application
+ * Created on: 8/11/2016
+ */
 package mygame;
 import ai.AICar;
 import vehicles.*;
@@ -79,7 +84,7 @@ public class ClientMain extends SimpleApplication {
         InetAddress ipAddr;
         try {
             ipAddr = InetAddress.getLocalHost();
-            if (ipAddr.getHostAddress().equals(ServerMain.serverIP)) {
+            if (ipAddr.getHostAddress().equals(ServerMain.serverIP) || ServerMain.numOfClients == 1) {
                 userTransform = rrs.spawnPoints[0];
             }
             else {
@@ -150,8 +155,14 @@ public class ClientMain extends SimpleApplication {
         }
         myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
         if (startMatch) {
-            if (rootNode.hasChild(bot.getCarNode()))
+            if (rootNode.hasChild(bot.getCarNode())) {
                 rootNode.detachChild(bot.getCarNode());
+                try {
+                    startMatch();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         else
             bot.AIUpdate();
@@ -192,7 +203,8 @@ public class ClientMain extends SimpleApplication {
         super.destroy();
     }
     
-    public void startMatch() {
-        
+    public void startMatch() throws InterruptedException {
+        ferrari.getCarNode().setLocalTranslation(userTransform);
+        //Thread.sleep(5000);
     }
 }
