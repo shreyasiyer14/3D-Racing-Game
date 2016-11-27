@@ -165,6 +165,8 @@ public class ClientMain extends SimpleApplication {
         }
         if (startMatch) {
             if (rootNode.hasChild(bot.getCarNode())) {
+                bot.getCarNode().removeControl(bot.getController());
+                getPhysicsSpace().remove(bot.getCarNode());
                 rootNode.detachChild(bot.getCarNode());
                 try {
                     startMatch();
