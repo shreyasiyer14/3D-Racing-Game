@@ -36,7 +36,7 @@ public class Stage1 {
    public void init_stage1(){
        Scene= assetManager.loadModel("Models/Tracks/Race Track/RaceTrack/FullTrack.j3o");
        Scene.scale(LocalScale);
-       Scene.setShadowMode(ShadowMode.Receive);
+       Scene.setShadowMode(ShadowMode.CastAndReceive);
        Scene.addControl(new RigidBodyControl(0));
        getPhysicsSpace().add(Scene);       
    }
