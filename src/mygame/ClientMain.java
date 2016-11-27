@@ -6,6 +6,7 @@
 package mygame;
 import gui.LapManager;
 import ai.AICar;
+import audio.AudioManager;
 import vehicles.*;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
@@ -130,7 +131,7 @@ public class ClientMain extends SimpleApplication {
         opponent = new Opponent(new Vector3f(0f,-100f,0f), 1000f, assetManager);
         opponent.initOpponent();
         
-        bot = new AICar(0.5f, 4f, 1000f, assetManager);
+        bot = new AICar(0.5f, 3f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {
@@ -148,6 +149,10 @@ public class ClientMain extends SimpleApplication {
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
         rootNode.addLight(dl);
         
+        AudioManager am = new AudioManager(assetManager, "Sounds/Bullet For My Valentine - Waking The Demon.ogg");
+        am.initAudio();
+        rootNode.attachChild(am.getAudioNode());
+        am.getAudioNode().play();
         /*
         
         guiNode.detachAllChildren();
@@ -162,13 +167,11 @@ public class ClientMain extends SimpleApplication {
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
         rootNode.attachChild(opponent.getCarNode());
+        
     }  
  
     @Override
     public void simpleUpdate(float tpf) {
-        
-        listener.setLocation(cam.getLocation());
-        listener.setRotation(cam.getRotation());
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager, timer);
         if (lapManager.matchCompleted()) {
             myClient.send(new NetworkMessage("Completed"));
