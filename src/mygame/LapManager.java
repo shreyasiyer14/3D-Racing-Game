@@ -26,15 +26,22 @@ public class LapManager {
         lapCount = laps;
     }
     
-    public void checkCompletion(Vector3f vehicleTransform, Node guiNode, BitmapFont guiFont, AssetManager assetManager) {
+    public void checkCompletion(Vector3f vehicleTransform, Node guiNode, BitmapFont guiFont, AssetManager assetManager, float tpf) {
         guiNode.detachAllChildren();
         guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
         BitmapText helloText = new BitmapText(guiFont, false);
-        helloText.setSize(guiFont.getCharSet().getRenderedSize());
+        BitmapText helloText2 = new BitmapText(guiFont, false);
+        helloText.setSize(guiFont.getCharSet().getRenderedSize()*2);
         helloText.setText("Lap: " + (3 - lapCount) + "/" + "3");
         helloText.setColor(ColorRGBA.Yellow);
-        helloText.setLocalTranslation(100, helloText.getLineHeight() + 300, 0);
+        helloText.setLocalTranslation(100, ClientMain.settings.getHeight() - 100, 0);
+        helloText2.setSize(guiFont.getCharSet().getRenderedSize()*2);
+        helloText2.setText("Split Time: " + tpf);
+        helloText2.setColor(ColorRGBA.Yellow);
+        helloText2.setLocalTranslation(ClientMain.settings.getWidth() - 300, ClientMain.settings.getHeight() - 100, 0);
         guiNode.attachChild(helloText);
+        guiNode.attachChild(helloText2);
+
         
         if (vehicleTransform.distance(startPoint) <= 7.0f) {
             if (lapCount == 0)

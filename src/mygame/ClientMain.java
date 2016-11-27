@@ -1,5 +1,5 @@
 /*
- * Created by Shreyas Iyer, IMT2015018
+ * Created by Shreyas Iyer & Udit Jindal
  * Module: Client side application
  * Created on: 8/11/2016
  */
@@ -52,17 +52,18 @@ public class ClientMain extends SimpleApplication {
     
     public Client myClient;
     private static ClientMain app;
-    
+    public static AppSettings settings;
     private boolean hasWon = false;
     private boolean isConnected = false;
     private boolean startMatch = false;
     private boolean hasCompleted = true;
     private BitmapText helloText;
+    private float timer = 0f;
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
-        AppSettings settings = new AppSettings(true);
+        settings = new AppSettings(true);
         settings.setFrameRate(300);
         settings.setResolution(1024, 768);
         app = new ClientMain();
@@ -74,6 +75,7 @@ public class ClientMain extends SimpleApplication {
 
     public ClientMain() {
         super(new StatsAppState());
+        super.setSettings(settings);
     }
     @Override
     public void simpleInitApp() {
@@ -117,7 +119,7 @@ public class ClientMain extends SimpleApplication {
             assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
 
-        lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 1);
+        lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
         
         ferrari = new Ferrari (0.3f, userTransform , 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();      
@@ -163,9 +165,10 @@ public class ClientMain extends SimpleApplication {
  
     @Override
     public void simpleUpdate(float tpf) {
+        
         listener.setLocation(cam.getLocation());
         listener.setRotation(cam.getRotation());
-        lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
+        lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager, timer);
         if (lapManager.matchCompleted()) {
             myClient.send(new NetworkMessage("Completed"));
             hasCompleted = true;
@@ -173,6 +176,7 @@ public class ClientMain extends SimpleApplication {
         }
         myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
         if (myClient.isConnected()) {
+            timer += tpf;
             myClient.send(new NetworkMessage("Connected"));
         }
         if (startMatch) {
