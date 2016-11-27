@@ -150,7 +150,7 @@ public class ClientMain extends SimpleApplication {
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
         rootNode.addLight(dl);
         
-        AudioManager am = new AudioManager(assetManager, "Sounds/Bullet For My Valentine - Waking The Demon.ogg");
+        AudioManager am = new AudioManager(assetManager, "Sounds/Bullet For My Valentine - Hand Of Blood.ogg");
         am.initAudio();
         rootNode.attachChild(am.getAudioNode());
         am.getAudioNode().play();
