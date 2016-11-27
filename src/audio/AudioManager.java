@@ -1,6 +1,6 @@
 /*
  * Created by Shreyas Iyer, IMT2015018
- * Module: Ferrari car description
+ * Module: Audio node and it's description
  * Created on: 8/11/2016
  */
 package audio;

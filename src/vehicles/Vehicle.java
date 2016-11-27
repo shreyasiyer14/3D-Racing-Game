@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Abstract class as the base for other vehicles, used in the game.
  */
 package vehicles;
 import com.jme3.app.state.AppStateManager;

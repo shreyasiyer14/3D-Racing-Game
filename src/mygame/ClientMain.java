@@ -154,16 +154,6 @@ public class ClientMain extends SimpleApplication {
         am.initAudio();
         rootNode.attachChild(am.getAudioNode());
         am.getAudioNode().play();
-        /*
-        
-        guiNode.detachAllChildren();
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        BitmapText helloText = new BitmapText(guiFont, false);
-        helloText.setSize(guiFont.getCharSet().getRenderedSize());
-        helloText.setColor(ColorRGBA.Red);
-        helloText.setLocalTranslation(320, helloText.getLineHeight() + 300, 0);
-        
-        */
         rootNode.attachChild(ferrari.getCarNode());
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
@@ -215,16 +205,10 @@ public class ClientMain extends SimpleApplication {
                 if ("Won".equals(message.getMessage())) {
                     hasWon = true;
                     System.out.println("Congratulations! You have won!");
-
-                    //helloText.setText("Congratulations! You have Won!");
-                    //guiNode.attachChild(helloText);
-
                 }
                 else if ("Lost".equals(message.getMessage())) {
                     hasWon = false;
                     System.out.println("Damn! So close!");
-                    //helloText.setText("Damn! Better luck next time...");
-                    //guiNode.attachChild(helloText);
                 }   
                 if ("OpponentConnected".equals(message.getMessage()) && !isConnected) {
                     isConnected = true;

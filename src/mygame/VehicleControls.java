@@ -1,6 +1,7 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Created by Udit Jindal, IMT2015043
+ * Module: User controls definitions.
+ * Created on: 8/11/2016
  */
 package mygame;
 import com.jme3.app.SimpleApplication;
