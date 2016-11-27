@@ -3,7 +3,7 @@
  * Module: Information about the Laps is stored here.
  * Created on: 8/11/2016
  */
-package mygame;
+package gui;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
@@ -11,6 +11,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import mygame.ClientMain;
 
 /**
  *
