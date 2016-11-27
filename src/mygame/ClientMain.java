@@ -23,6 +23,7 @@ import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
+import com.jme3.util.SkyFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -42,7 +43,6 @@ public class ClientMain extends SimpleApplication {
     private Vehicle ferrari;
     private VehicleControls Control;
     private Vector3f userTransform;
-    private Vector3f opponentTransform;
     private String serverIP;
     
     private Opponent opponent;
@@ -56,6 +56,8 @@ public class ClientMain extends SimpleApplication {
     private boolean hasWon = false;
     private boolean isConnected = false;
     private boolean startMatch = false;
+    private boolean hasCompleted = true;
+    private BitmapText helloText;
     ConcurrentLinkedQueue<String> messageQueue;
     
     public static void main(String[] args) {
@@ -92,11 +94,9 @@ public class ClientMain extends SimpleApplication {
             ipAddr = InetAddress.getLocalHost();
             if (ipAddr.getHostAddress().equals(serverIP)) {
                 userTransform = rrs.spawnPoints[0];
-                opponentTransform = rrs.spawnPoints[1];
             }
             else {
                 userTransform = rrs.spawnPoints[1];
-                opponentTransform = rrs.spawnPoints[0];
             }
 
         } catch (UnknownHostException ex) {
@@ -106,17 +106,18 @@ public class ClientMain extends SimpleApplication {
         physicsEngine = new BulletAppState();
         stateManager.attach(physicsEngine);
          if (settings.getRenderer().startsWith("LWJGL")) {
-            BasicShadowRenderer bsr = new BasicShadowRenderer(assetManager, 512);
+            BasicShadowRenderer bsr = new BasicShadowRenderer(assetManager, 2048);
             bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
             viewPort.addProcessor(bsr);
         }
         cam.setFrustumFar(1000f);
         viewPort.setBackgroundColor(ColorRGBA.White);
         inputManager.setCursorVisible(true);
-        
+        rootNode.attachChild(SkyFactory.createSky(
+            assetManager, "Textures/Sky/Bright/BrightSky.dds", false));
         getPhysicsSpace().setGravity(new Vector3f(0, -20f, 0));
 
-        lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
+        lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 1);
         
         ferrari = new Ferrari (0.3f, userTransform , 20f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();      
@@ -143,7 +144,17 @@ public class ClientMain extends SimpleApplication {
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
         rootNode.addLight(dl);
-
+        
+        /*
+        
+        guiNode.detachAllChildren();
+        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        BitmapText helloText = new BitmapText(guiFont, false);
+        helloText.setSize(guiFont.getCharSet().getRenderedSize());
+        helloText.setColor(ColorRGBA.Red);
+        helloText.setLocalTranslation(320, helloText.getLineHeight() + 300, 0);
+        
+        */
         rootNode.attachChild(ferrari.getCarNode());
         rootNode.attachChild(stage.get_Stage());
         rootNode.attachChild(bot.getCarNode());
@@ -157,6 +168,7 @@ public class ClientMain extends SimpleApplication {
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager);
         if (lapManager.matchCompleted()) {
             myClient.send(new NetworkMessage("Completed"));
+            hasCompleted = true;
             lapManager.matchCompleted = false;
         }
         myClient.send(new UtNetworking.PosAndRotMessage(ferrari.getCarNode().getLocalTranslation(), ferrari.getCarNode().getLocalRotation()));
@@ -177,6 +189,7 @@ public class ClientMain extends SimpleApplication {
         }
         else
             bot.AIUpdate();
+
     }
     private class NetworkMessageListener implements MessageListener<Client> {
         @Override
@@ -184,10 +197,18 @@ public class ClientMain extends SimpleApplication {
             if (m instanceof NetworkMessage) {
                 NetworkMessage message = (NetworkMessage) m;
                 if ("Won".equals(message.getMessage())) {
-                    System.out.println("Congratulations! You have Won!");     
+                    hasWon = true;
+                    System.out.println("Congratulations! You have won!");
+
+                    //helloText.setText("Congratulations! You have Won!");
+                    //guiNode.attachChild(helloText);
+
                 }
                 else if ("Lost".equals(message.getMessage())) {
+                    hasWon = false;
                     System.out.println("Damn! So close!");
+                    //helloText.setText("Damn! Better luck next time...");
+                    //guiNode.attachChild(helloText);
                 }   
                 if ("OpponentConnected".equals(message.getMessage()) && !isConnected) {
                     isConnected = true;

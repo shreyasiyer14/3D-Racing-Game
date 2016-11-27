@@ -32,7 +32,7 @@ public class LapManager {
         BitmapText helloText = new BitmapText(guiFont, false);
         helloText.setSize(guiFont.getCharSet().getRenderedSize());
         helloText.setText("Lap: " + (3 - lapCount) + "/" + "3");
-        helloText.setColor(ColorRGBA.Red);
+        helloText.setColor(ColorRGBA.Yellow);
         helloText.setLocalTranslation(100, helloText.getLineHeight() + 300, 0);
         guiNode.attachChild(helloText);
         
