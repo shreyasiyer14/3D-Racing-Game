@@ -46,6 +46,7 @@ public class VehicleControls implements ActionListener {
         inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addMapping("Reverse", new KeyTrigger(KeyInput.KEY_S));
+        inputManager.addMapping("RearLook", new KeyTrigger(KeyInput.KEY_L));
         inputManager.addListener(this, "Lefts");
         inputManager.addListener(this, "Rights");
         inputManager.addListener(this, "Ups");
@@ -53,6 +54,7 @@ public class VehicleControls implements ActionListener {
         inputManager.addListener(this, "Space");
         inputManager.addListener(this, "Reset");
         inputManager.addListener(this, "Reverse");
+        inputManager.addListener(this, "RearLook");
     }
     @Override
     public void onAction(String binding, boolean value, float tpf) {
@@ -112,6 +114,14 @@ public class VehicleControls implements ActionListener {
                 vehicle.getController().resetSuspension();
             } else {
             
+            }
+        }
+        if (binding.equals("RearLook")) {
+            if (value) {
+                vehicle.rearLook = true;
+            }
+            else {
+                vehicle.rearLook = false;
             }
         }
     }

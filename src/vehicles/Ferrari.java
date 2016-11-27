@@ -44,6 +44,7 @@ public class Ferrari extends Vehicle{
     private Node Car;
     private Material mat;
     private ColorRGBA matColor;
+    public boolean rearLook = false;
     public Ferrari (float scale, Vector3f transform, float speed, float mass, AssetManager assetManager, ColorRGBA color) {
         carScale = scale;
         carTransform = transform;

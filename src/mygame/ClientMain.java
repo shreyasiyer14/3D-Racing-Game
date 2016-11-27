@@ -44,6 +44,7 @@ public class ClientMain extends SimpleApplication {
     private AICar bot;
     private Vehicle ferrari;
     private VehicleControls Control;
+    private VehicleCamera vcam;
     private Vector3f userTransform;
     private String serverIP;
     
@@ -62,7 +63,7 @@ public class ClientMain extends SimpleApplication {
     private BitmapText helloText;
     private float timer = 0f;
     ConcurrentLinkedQueue<String> messageQueue;
-    
+    private Vector3f originalCam;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
         settings = new AppSettings(true);
@@ -141,7 +142,7 @@ public class ClientMain extends SimpleApplication {
         Stage1 stage= new Stage1(new Vector3f(270f, -20f, 15f), 75f,assetManager);
         stage.init_stage1();
         
-        VehicleCamera vcam = new VehicleCamera("Camera Node", new Vector3f(0f,4f,12f), new Vector3f(0f,22f,0f), cam);
+        vcam = new VehicleCamera("Camera Node", new Vector3f(0f,4f,12f), new Vector3f(0f,22f,0f), cam);
         vcam.initCamera();
         ferrari.getCarNode().attachChild(vcam.getCamera());
         
@@ -197,6 +198,13 @@ public class ClientMain extends SimpleApplication {
         }
         else
             bot.AIUpdate();
+        if (ferrari.rearLook) {
+            vcam.getCamera().rotate(0, 3.14f, 0);
+            ferrari.rearLook = false;
+        }
+        else {
+            vcam.getCamera().setLocalTranslation(new Vector3f(0f, 4f, 12f));
+        }
 
     }
     private class NetworkMessageListener implements MessageListener<Client> {
