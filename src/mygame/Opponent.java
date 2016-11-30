@@ -33,7 +33,8 @@ public class Opponent {
         opponent = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
 
     }
-    
+    //Initializes the dummy of the opponent client in the game world, and attach a rigidbodycontroller and a box collider to it.
+    //Lastly adding it to the physics space.
     public void initOpponent() {
         opponent.setLocalTranslation(carTransform);
         Geometry chasis = Vehicle.getGeometryOfNode(opponent, "Car");

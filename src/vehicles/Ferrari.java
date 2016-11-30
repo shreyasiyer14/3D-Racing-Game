@@ -55,6 +55,10 @@ public class Ferrari extends Vehicle{
 
         matColor = color;
     }
+    
+    //Initialize the various parameters of the car, and attach it to a VehicleController class, and a box collider as well.
+    //We even separate out the wheel spatials of the car, and add controls to them.
+    //So that the static spatial wheels can act as proper wheels, (rotating and turning)
     @Override
     public void initVehicle () {
         float stiffness = 120.0f;//200=f1 car

@@ -25,6 +25,7 @@ public class VehicleCamera {
         this.rotation = rotation;
         camNode = new CameraNode(name, cam);
     }
+    //Initialize the parameter of the camera node, and set it's direction and position to the rear of the car.
     public void initCamera() {
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         camNode.setLocalTranslation(transform);

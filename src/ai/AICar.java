@@ -29,7 +29,6 @@ import util.TextLoader;
  * @author EOF-1
  */
 public class AICar {
-    Geometry wheel_fl, wheel_fr, wheel_br, wheel_bl;
     private final float carScale;
     private final float carSpeed;
     private final float carMass;
@@ -38,10 +37,7 @@ public class AICar {
     public float currentCoordZ;
 
     private Geometry ferrariChassis;
-    private BoundingBox collider;
-    private BulletAppState bulletAppState;
     private VehicleControl player;
-    private AppStateManager stateManager;
     private final AssetManager assetManager;
     private final Node Car;
     private final Vector pathTraceCoords;
@@ -56,6 +52,7 @@ public class AICar {
         pathTraceCoords = new Vector(1,1);
     }
     
+    //Initialize the bot's starting position, and attach a box collider to the spatial, and lastly add it to the physics space.
     public void initAICar() throws IOException {
         initTracingCoordinates();
         Car.setLocalTranslation((Float)pathTraceCoords.get(0), (Float)pathTraceCoords.get(1), (Float)pathTraceCoords.get(2));
@@ -75,18 +72,11 @@ public class AICar {
         Car.addControl(rbc);
         rbc.setKinematic(true);
         rbc.setKinematicSpatial(true);
-
-        wheel_fr = getGeometryOfNode(Car, "WheelFrontRight");
-
-        wheel_fl = getGeometryOfNode(Car, "WheelFrontLeft");
-
-        wheel_br = getGeometryOfNode(Car, "WheelBackRight");
-        
-        wheel_bl = getGeometryOfNode(Car, "WheelBackLeft");
         getPhysicsSpace().add(Car);
 
     }
     
+    //Read the coordinates from the file, and push it in a vector.
     public void initTracingCoordinates() throws IOException {
         assetManager.registerLoader(TextLoader.class, "txt");
         String file = (String) assetManager.loadAsset("Models/AIPathCoordinates copy.txt");
@@ -96,6 +86,7 @@ public class AICar {
         }
     }
     
+    //Return the geometry object corresponding to the supplied spatial.
     public Geometry getGeometryOfNode(Spatial spatial, String name) {
         if (spatial instanceof Node) {
             Node node = (Node) spatial;
@@ -120,16 +111,15 @@ public class AICar {
     public Node getCarNode() {
         return Car;
     }
+    //Manages the movement of the Bot. When it reaches a node, it should follow the path to the next node.
     public void AIMove() {
         Car.lookAt(new Vector3f(currentCoordX, currentCoordY, currentCoordZ), Vector3f.UNIT_Y);
         Car.setLocalRotation(Car.getLocalRotation().opposite());
         Car.move(new Vector3f((currentCoordX - Car.getLocalTranslation().x), (currentCoordY - Car.getLocalTranslation().y), (currentCoordZ - Car.getLocalTranslation().z)).normalize().divide(carSpeed));
         rbc.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(getGeometryOfNode(Car, "Car")));        
     }
-    public void AIAccelerate() { 
-        //Car.move(0.2f, 0.0f, 0.0f );
-        //player.accelerate(-700f);
-    }
+    
+    //Check every frame if the bot reached the nearest node, and then overwrite the currentCoord with the coordinates of it's next node.
     public void AIUpdate() {
         rbc.setPhysicsLocation(Car.getLocalTranslation());
         if (Car.getLocalTranslation().distance(new Vector3f(currentCoordX, currentCoordY, currentCoordZ)) < 3.0f) {
@@ -147,16 +137,6 @@ public class AICar {
             currentCoordZ = (Float)pathTraceCoords.get(5 + i);
         }
         AIMove();
-        AIAccelerate();
-
-        //UpdateWheels();
-    }
-    
-    public void UpdateWheels() {
-        wheel_fl.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
-        wheel_fr.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
-        wheel_bl.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
-        wheel_br.rotate(new Quaternion(0.0f, 0.0f, 2.0f, 1.0f));
     }
 }
 

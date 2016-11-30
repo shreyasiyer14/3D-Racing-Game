@@ -38,7 +38,7 @@ public class VehicleControls implements ActionListener {
         this.vehicleName= name;
     }
     
-    
+    //This function manages the keyboard, or mouse based event, and it listens for input every frame.
     public void setupKeys() {
         inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
@@ -57,6 +57,9 @@ public class VehicleControls implements ActionListener {
         inputManager.addListener(this, "Reverse");
         inputManager.addListener(this, "RearLook");
     }
+    
+    //When a key is pressed, it has a value 1 or 0, saying whether it is pressed or not, and so accordingly we take actions.
+    //Such as accelerate the car, or brake, or turn left or right, based on the corresponding keyboard strokes.
     @Override
     public void onAction(String binding, boolean value, float tpf) {
         if (binding.equals("Lefts")) {

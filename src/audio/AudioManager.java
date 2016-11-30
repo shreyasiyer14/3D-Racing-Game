@@ -21,6 +21,7 @@ public class AudioManager {
         this.audioFile = audioFile;
     }
     
+    //Initialize the audio node, with the file name, and set it's properties.
     public void initAudio() {
         backGroundTrack = new AudioNode(assetManager, audioFile, true);
         backGroundTrack.setLooping(true);  // activate continuous playing

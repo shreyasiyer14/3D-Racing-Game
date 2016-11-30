@@ -80,11 +80,18 @@ public class ClientMain extends SimpleApplication {
         super(new StatsAppState());
         super.setSettings(settings);
     }
+    
+    //As the name suggests, this function is used to initialize all the entities to be present in the world.
+    //We firstly make the client connect to the server at the specified IP, and change it transform position accordingly.
+    //We setup the networking modules, such as the networklistener, and also setup Bullet physics to enable physics in the game.
+    //Also, in this function, we make updates to the viewport of the game, and setup the properties as per out liking.
+    //Lastly, we attach all the entities to the rootNode, so that they are visible in the game.
+    
     @Override
     public void simpleInitApp() {
 
         try {
-            serverIP = "172.16.81.21";
+            serverIP = "localhost";
             myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
@@ -160,7 +167,11 @@ public class ClientMain extends SimpleApplication {
         rootNode.attachChild(opponent.getCarNode());
         
     }  
- 
+    
+    //This update function is called every frame of the game.
+    //This has procedures which are to be checked, or performed every frame.
+    //Like, checking completion of a lap, or updating the bot position, or sending a message on an event.
+    //It even has a functionality to switch to rear view camera on pressing 'L' key.
     @Override
     public void simpleUpdate(float tpf) {
         lapManager.checkCompletion(ferrari.getCarNode().getLocalTranslation(), guiNode, guiFont, assetManager, timer);
@@ -197,8 +208,11 @@ public class ClientMain extends SimpleApplication {
         }
 
     }
+    
+    //Listens for messages to be received from the server, which can be of various types, as seen in UtNetworking class.
     private class NetworkMessageListener implements MessageListener<Client> {
         @Override
+        //If a message 'm' is received from a 'source' client, already connected to the server
         public void messageReceived(Client source, Message m) {
             if (m instanceof NetworkMessage) {
                 NetworkMessage message = (NetworkMessage) m;
