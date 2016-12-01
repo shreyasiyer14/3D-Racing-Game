@@ -64,6 +64,7 @@ public class ClientMain extends SimpleApplication {
     private float timer = 0f;
     ConcurrentLinkedQueue<String> messageQueue;
     private Vector3f originalCam;
+    private String audioFile;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
         settings = new AppSettings(true);
@@ -91,7 +92,7 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            serverIP = "localhost";
+            serverIP = "172.16.81.13";
             myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {
@@ -106,9 +107,11 @@ public class ClientMain extends SimpleApplication {
             ipAddr = InetAddress.getLocalHost();
             if (ipAddr.getHostAddress().equals(serverIP)) {
                 userTransform = rrs.spawnPoints[0];
+                audioFile = "Sounds/Bullet For My Valentine - Hand Of Blood.ogg";
             }
             else {
                 userTransform = rrs.spawnPoints[1];
+                audioFile = "Sounds/Bullet For My Valentine - Waking The Demon.ogg";
             }
 
         } catch (UnknownHostException ex) {
@@ -139,7 +142,7 @@ public class ClientMain extends SimpleApplication {
         opponent = new Opponent(new Vector3f(0f,-100f,0f), 1000f, assetManager);
         opponent.initOpponent();
         
-        bot = new AICar(0.5f, 3f, 1000f, assetManager);
+        bot = new AICar(0.5f, 2.5f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {
@@ -157,7 +160,7 @@ public class ClientMain extends SimpleApplication {
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
         rootNode.addLight(dl);
         
-        AudioManager am = new AudioManager(assetManager, "Sounds/Bullet For My Valentine - Hand Of Blood.ogg");
+        AudioManager am = new AudioManager(assetManager, audioFile);
         am.initAudio();
         rootNode.attachChild(am.getAudioNode());
         am.getAudioNode().play();
