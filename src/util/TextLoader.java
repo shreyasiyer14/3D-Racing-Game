@@ -1,6 +1,6 @@
 /*
  * Created by Shreyas Iyer, IMT2015018
- * Module: Ferrari car description
+ * Module: Loading text files as assets.
  * Created on: 8/11/2016
  */
 package util;
@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 /**
  *
- * @author EOF-1
  */
+//This is a class suplementing the AssetLoader class, which is used to load a text file as an asset in the engine.
 public class TextLoader implements AssetLoader {
     @Override
     public Object load(AssetInfo assetInfo) throws IOException {

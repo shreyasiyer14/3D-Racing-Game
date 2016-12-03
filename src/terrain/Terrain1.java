@@ -22,11 +22,11 @@ import com.jme3.math.Vector3f;
 public class Terrain1{
     private Material mat_terrain;
     private TerrainQuad myterrain;
-    private String Name;
-    private int PatchSize;
-    private Vector3f LocalTrasnlation;
-    private Vector3f LocalScale;
-    private AssetManager assetManager;
+    private final String Name;
+    private final int PatchSize;
+    private final Vector3f LocalTrasnlation;
+    private final Vector3f LocalScale;
+    private final AssetManager assetManager;
     private AbstractHeightMap heightmap;
     
     public Terrain1(String Name, int PatchSize, Vector3f LocalTranslation, Vector3f LocalScale,

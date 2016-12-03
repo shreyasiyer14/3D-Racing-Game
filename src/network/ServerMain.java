@@ -30,7 +30,7 @@ public class ServerMain extends SimpleApplication {
     Server myServer;
     
     public static String serverIP;
-    private boolean matchReady = false;
+    private final boolean matchReady = false;
     public static int numOfClients;
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
@@ -41,7 +41,6 @@ public class ServerMain extends SimpleApplication {
             serverIP = ipAddr.getHostAddress();
             System.out.println("Server running on port: " + UtNetworking.PORT + " IP: " + serverIP);
         } catch (UnknownHostException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -62,6 +61,7 @@ public class ServerMain extends SimpleApplication {
     }
 
     private class MessageHandler implements MessageListener<HostedConnection> {
+       @Override
        public void messageReceived(HostedConnection source, Message m) {
            if (myServer.getConnections().size() >= 2) {
                 int otherClientIndex = 0;

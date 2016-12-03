@@ -1,8 +1,3 @@
-/*
- * Created by Shreyas Iyer & Udit Jindal
- * Module: Client side application
- * Created on: 8/11/2016
- */
 package mygame;
 import gui.LapManager;
 import ai.AICar;
@@ -34,7 +29,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import network.RoundRobinSpawn;
-import network.ServerMain;
 import network.UtNetworking;
 import network.UtNetworking.NetworkMessage;
 import network.UtNetworking.PosAndRotMessage;
@@ -92,7 +86,7 @@ public class ClientMain extends SimpleApplication {
     public void simpleInitApp() {
 
         try {
-            serverIP = "172.16.81.13";
+            serverIP = "localhost";
             myClient = Network.connectToServer(serverIP, UtNetworking.PORT);
             myClient.start();
         } catch (IOException ex) {

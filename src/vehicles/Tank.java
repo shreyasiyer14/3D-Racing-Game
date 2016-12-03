@@ -6,7 +6,6 @@
 package vehicles;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
-import static com.jme3.bullet.PhysicsSpace.getPhysicsSpace;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -16,10 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.VehicleControl;
-import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.asset.*;
-import com.jme3.scene.Spatial;
-import mygame.VehicleControls;
 
 
 

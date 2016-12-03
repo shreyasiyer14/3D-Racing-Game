@@ -27,6 +27,9 @@ public class LapManager {
         lapCount = laps;
     }
     
+    //This function is run at every frame, and it checks when the user crosses the startPoint and then updates the lap count accordingly.
+    //Also it handles the display of the lap count on the top of the screen.
+    //Apart from the lap count, it also shows the timer on the screen.
     public void checkCompletion(Vector3f vehicleTransform, Node guiNode, BitmapFont guiFont, AssetManager assetManager, float tpf) {
         guiNode.detachAllChildren();
         guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
@@ -62,11 +65,13 @@ public class LapManager {
         return lapCount;
     }
 
+    //If the user finishes all the three laps, then it returns true. 
     public boolean matchCompleted() {
         return matchCompleted;
     
     }
     
+    //Reset the laps completed again to 0.
     public void resetLaps() {
         lapCount = 3;
     }

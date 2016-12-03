@@ -12,7 +12,6 @@ import com.jme3.scene.control.CameraControl;
 
 /**
  *
- * @author EOF-1
  */
 public class VehicleCamera {
     private CameraNode camNode;

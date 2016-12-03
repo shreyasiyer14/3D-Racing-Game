@@ -31,19 +31,18 @@ public class Ferrari extends Vehicle{
     private VehicleWheel fr, fl, br, bl;
     private Node node_fr, node_fl, node_br, node_bl;
     private float wheelRadius;
-    private float carScale;
-    private Vector3f carTransform;
-    private float carSpeed;
-    private float carMass;
+    private final float carScale;
+    private final Vector3f carTransform;
+    private final float carSpeed;
+    private final float carMass;
     private Geometry ferrariChassis;
     private BoundingBox collider;
     private BulletAppState bulletAppState;
     private VehicleControl player;
     private AppStateManager stateManager;
-    private AssetManager assetManager;
+    private final AssetManager assetManager;
     private Node Car;
-    private Material mat;
-    private ColorRGBA matColor;
+
     public boolean rearLook = false;
     public Ferrari (float scale, Vector3f transform, float speed, float mass, AssetManager assetManager, ColorRGBA color) {
         carScale = scale;
@@ -52,8 +51,6 @@ public class Ferrari extends Vehicle{
         carMass = mass;
         this.assetManager= assetManager;
         Car = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
-
-        matColor = color;
     }
     
     //Initialize the various parameters of the car, and attach it to a VehicleController class, and a box collider as well.
@@ -64,16 +61,12 @@ public class Ferrari extends Vehicle{
         float stiffness = 120.0f;//200=f1 car
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
-        //Load model and get chassis Geometry
-        //mat = new Material(assetManager, 
-        //"Common/MatDefs/Misc/Unshaded.j3md"); 
-        //mat.setTexture("ColorMap", assetManager.loadTexture("Models/Ferrari/Car.jpg"));
-        //mat.setColor("Color", matColor);
+
         Car.setLocalTranslation(carTransform);
         Car.setShadowMode(ShadowMode.CastAndReceive);
         Geometry chasis = getGeometryOfNode(Car, "Car");
         BoundingBox box = (BoundingBox) chasis.getModelBound();
-        //chasis.setMaterial(mat);
+        
         //Create a hull collision shape for the chassis
         CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
         //Create a vehicle control

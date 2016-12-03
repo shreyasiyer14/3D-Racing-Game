@@ -19,10 +19,10 @@ import com.jme3.scene.Spatial;
 
 public class Stage1 {
     
-   private AssetManager assetManager;
+   private final AssetManager assetManager;
    private Spatial Scene;
-   private Vector3f LocalTranslation;
-    private float LocalScale;
+   private final Vector3f LocalTranslation;
+    private final float LocalScale;
    
    public Stage1(Vector3f LocalTranslation, float LocalScale, AssetManager assetManager){
        this.assetManager=  assetManager;
