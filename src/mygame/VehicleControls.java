@@ -11,6 +11,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.InputManager;
+import com.jme3.math.Matrix3f;
 
 /**
  *
@@ -108,7 +109,7 @@ public class VehicleControls implements ActionListener {
             if (value) {
                 System.out.println("Reset");
                 vehicle.getController().setPhysicsLocation(new Vector3f(-20f, 18f,-2f));
-                //vehicle.getController().setPhysicsRotation(new Matrix3f());
+                vehicle.getController().setPhysicsRotation(new Matrix3f());
                 vehicle.getController().setLinearVelocity(Vector3f.ZERO);
                 vehicle.getController().setAngularVelocity(Vector3f.ZERO);
                 vehicle.getController().resetSuspension();

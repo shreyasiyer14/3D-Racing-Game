@@ -128,15 +128,15 @@ public class ClientMain extends SimpleApplication {
 
         lapManager = new LapManager(new Vector3f(0.38055262f, 14.283572f, -25.188498f), 3);
         
-        ferrari = new Ferrari (0.3f, userTransform , 20f, 1000f,assetManager, ColorRGBA.Red);
+        ferrari = new Ferrari (0.3f, userTransform , 200f, 1000f,assetManager, ColorRGBA.Red);
         ferrari.initVehicle();      
-        Control= new VehicleControls("Car", ferrari ,2000f, inputManager);
+        Control= new VehicleControls("Car", ferrari ,20000f, inputManager);
         Control.setupKeys(); 
         
         opponent = new Opponent(new Vector3f(0f,-100f,0f), 1000f, assetManager);
         opponent.initOpponent();
         
-        bot = new AICar(0.5f, 2.5f, 1000f, assetManager);
+        bot = new AICar(0.5f, 1f, 1000f, assetManager);
         try {
             bot.initAICar();
         } catch (IOException ex) {
